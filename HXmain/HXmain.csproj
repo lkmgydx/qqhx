@@ -1,0 +1,649 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{90E7D573-C0A7-4915-9AAB-C0D5F6B9852C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HXmain</RootNamespace>
+    <AssemblyName>HXmain</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="WSTools">
+      <HintPath>F:\svn\util\wsTools\bin\Debug\WSTools.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Event\Events.cs" />
+    <Compile Include="GameAction.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="HXAction\AuToGet.cs" />
+    <Compile Include="HXAction\AutoRunGame.cs" />
+    <Compile Include="HXAction\AUTOTiLianWuPing.cs" />
+    <Compile Include="HXAction\BaseAction.cs" />
+    <Compile Include="HXAction\CloseGameWins.cs" />
+    <Compile Include="HXAction\DrawMapPoints.cs" />
+    <Compile Include="HXAction\IAction.cs" />
+    <Compile Include="HXAction\MovePerson.cs" />
+    <Compile Include="HXAction\BathDo.cs" />
+    <Compile Include="HXAction\NpcAskDo.cs" />
+    <Compile Include="HXAction\PeronSetDown.cs" />
+    <Compile Include="HXAction\Qinyuan.cs" />
+    <Compile Include="HXAction\RunGamePath.cs" />
+    <Compile Include="HXAction\RunInfo.cs" />
+    <Compile Include="HXAction\SelectInfo.cs" />
+    <Compile Include="HXAction\StandCheck.cs" />
+    <Compile Include="HXAction\SystemConfig.cs" />
+    <Compile Include="HXAction\TiLian.cs" />
+    <Compile Include="HXAction\ToDaySlD.cs" />
+    <Compile Include="HXAction\WuPing.cs" />
+    <Compile Include="HXAction\WuPingData.cs" />
+    <Compile Include="HXAction\WuPingLanInfo.cs" />
+    <Compile Include="HXAction\三海经.cs" />
+    <Compile Include="HXAction\活跃度.cs" />
+    <Compile Include="HXAction\界面显示.cs" />
+    <Compile Include="HXAction\签到.cs" />
+    <Compile Include="HXInfo\AutoInXHZ.cs" />
+    <Compile Include="HXInfo\CacheData\NpcData.cs" />
+    <Compile Include="HXInfo\CacheData\SelectPersonData.cs" />
+    <Compile Include="HXInfo\GamePoint.cs" />
+    <Compile Include="HXInfo\HasSomeToHit.cs" />
+    <Compile Include="HXInfo\HXDieAutoLive.cs" />
+    <Compile Include="HXInfo\HXSetDown.cs" />
+    <Compile Include="HXInfo\HXZuDuics.cs" />
+    <Compile Include="HXInfo\Map\Class1.cs" />
+    <Compile Include="HXInfo\Map\MapAbs.cs" />
+    <Compile Include="HXInfo\Map\MapPoints.cs" />
+    <Compile Include="HXInfo\Map\Map升龙殿.cs" />
+    <Compile Include="HXInfo\Map\从雨.cs" />
+    <Compile Include="HXInfo\NPC\NPCBase.cs" />
+    <Compile Include="HXInfo\NPC\升龙殿\NPC_宅院驿丞.cs" />
+    <Compile Include="HXInfo\NPC\升龙殿\NPC_官职晋升.cs" />
+    <Compile Include="HXInfo\NPC\升龙殿\NPC_钱善.cs" />
+    <Compile Include="HXInfo\ObjectPick.cs" />
+    <Compile Include="HXInfo\YZM.cs" />
+    <Compile Include="ImgStr.cs" />
+    <Compile Include="HXInfo\Map\MapBase.cs" />
+    <Compile Include="HXInfo\Map\Map天圣原.cs" />
+    <Compile Include="MAddress.cs" />
+    <Compile Include="MainGame.cs" />
+    <Compile Include="MainManager.cs" />
+    <Compile Include="MainMap.cs" />
+    <Compile Include="PathPointUtil.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RangeUUID.cs" />
+    <Compile Include="ScreenCapture.cs" />
+    <Compile Include="Util\BaseGameConfig.cs" />
+    <Compile Include="Util\LockUtil.cs" />
+    <Compile Include="Win.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石_天行1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石_天行2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石_元如1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石_元如2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_魂魄1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_魂魄2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_晶石1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_晶石2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_矿石1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_矿石2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_其他材料1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_其他材料2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_单价.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_搜索.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石_北斗2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石_北斗.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石_无相2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石_望月1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石_望月2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料_宝石_无相1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\寄售_材料2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\p_run.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yzm.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\friendMap.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\friend.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\YZM_BTN.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\die_ok_btn.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tl.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cd.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\垂钓_钓鱼.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\垂钓_鱼点.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\empyYZM.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_北郡%28三%29.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_北郡%28四%29.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_北郡%28五%29.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_北郡%28一%29.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_从雨沼泽.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_东离草原.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_断壁谷.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_巨人野.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_琅琊盆地.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_林海.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_暮秀雨林.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_南郡.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_宁海州.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_秋枫原.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_升龙殿.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_天圣原.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_西烈荒原.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_轩辕.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_阪泉.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_北郡%28八%29.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_北郡%28二%29.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_北郡%28六%29.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_北郡%28七%29.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\巨人野.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\阪泉小范围.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\赤水.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\昆仑FB.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_162380801.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155637031.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155638921.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155553734.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155635625.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155635796.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155635968.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155636250.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155636390.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155636531.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155636656.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155636781.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_155636906.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zudui.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\p_setDown.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\p_setDown1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\p_setDown2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\轩辕.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_轩辕台一层.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\轩辕台一层.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\win_wpl.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wuping_empty.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\npc_升龙殿_宅院驿丞310211406.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zyyc_phb311259796.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zyyc_phb.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_投掷鲜花.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_排行_名字.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_官职任务.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_官职晋升.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\npc_钱善.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_我要出力.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\花费5官银重置任务.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_花20官银重置任务130879890.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\some_empty.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dia_技能窗口.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tool\Tool.csproj">
+      <Project>{97430568-b157-4229-9091-a9a12094d63b}</Project>
+      <Name>Tool</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dia_山海经.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_一键完成.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_我知道了.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\签到.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\win_每日签到.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\勘.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\win_游戏助手.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_我要出钱.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_领取荣誉.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\自动捐满Suc.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_自动捐满.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_花费5官银重置任务.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_花费20官银重置任务.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_花费20官银2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_花费5官银重置任务2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dt_昆仑.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\npc_卿阎.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_进入香魂冢.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\香魂冢.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\qy1314136.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\js1582661.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\运镖.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\win_游戏设置.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\config_游戏设置.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\诡墓.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\getWuping.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\move_jt.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\move_cf.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HXAction\Dialog\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rr.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_陈一尘27210187.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_陈一尘.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_寄售商人.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_仓库掌柜.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_华夏城公告板.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_杂货店掌柜.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_天界仙官.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_升龙殿传送官.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_姜子牙.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_武器商.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_清源长老.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\天圣原路径.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_看看有什么好东西.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NPC_驿站车夫.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\天圣原路径 驿站车夫3.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\从雨BOSS.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\win_技能窗口.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\win_技能窗口.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\win_技能窗口1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\jn55854625.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\工作技能Tab.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\act_钱善_exit.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_领取俸禄.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\对话_领取俸禄.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\领取俸禄退出.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\剩余0.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\结束对话.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\act_钱善_exit_明天再来.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_zy四品0.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_zy四品1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\前往打劫.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_趁火打劫.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\close.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\从雨沼泽30614390.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunPath\从雨沼泽31257578.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\免费拓印.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\山海拓印.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\黄金拓印.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_今日剩余打劫次数.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_肥羊列表.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_打劫4品1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_前往打劫.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\font_打劫剩余0.bmp" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

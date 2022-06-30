@@ -1,0 +1,472 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="friend" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\friend.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="yzm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\yzm.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="YZM_BTN" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\YZM_BTN.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_单价" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_单价.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_搜索" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_搜索.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_其他材料1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_其他材料1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_其他材料2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_其他材料2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石_元如1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石_元如1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石_元如2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石_元如2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石_北斗" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石_北斗.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石_北斗2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石_北斗2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石_天行1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石_天行1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石_天行2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石_天行2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石_无相1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石_无相2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石_无相2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石_无相1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石_望月1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石_望月1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_宝石_望月2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_宝石_望月2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_晶石1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_晶石1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_晶石2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_晶石2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_矿石1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_矿石1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_矿石2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_矿石2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_魂魄1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_魂魄1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="寄售_材料_魂魄2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\寄售_材料_魂魄2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="die_ok_btn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\die_ok_btn.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tl" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tl.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="垂钓" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cd.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="垂钓_钓鱼" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\垂钓_钓鱼.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="垂钓_鱼点" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\垂钓_鱼点.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="empyYZM" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\empyYZM.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155553734" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155553734.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155635625" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155635625.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155635796" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155635796.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155635968" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155635968.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155636250" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155636250.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155636390" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155636390.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155636531" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155636531.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155636656" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155636656.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155636781" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155636781.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155636906" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155636906.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155637031" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155637031.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="some_155638921" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_155638921.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="zudui" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\zudui.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="p_setDown1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\p_setDown1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="p_setDown2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\p_setDown2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="win_wpl" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\win_wpl.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_排行榜" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\zyyc_phb.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="npc_升龙殿_宅院驿丞310211406" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\npc_升龙殿_宅院驿丞310211406.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_投掷鲜花" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_投掷鲜花.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_排行_名字" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_排行_名字.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_一键完成" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_一键完成.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_官职任务" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_官职任务.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_官职晋升" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_官职晋升.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_我要出力" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_我要出力.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_我要出钱" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_我要出钱.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="npc_钱善" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\npc_钱善.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dia_山海经" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dia_山海经.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wuping_empty" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\some_empty.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_我知道了" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_我知道了.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="签到" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\签到.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="win_每日签到" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\win_每日签到.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="win_游戏助手" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\win_游戏助手.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="勘" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\勘.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_自动捐满" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_自动捐满.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_领取荣誉" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_领取荣誉.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="自动捐满Suc" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\自动捐满Suc.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_花费5官银重置任务" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_花费5官银重置任务.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_花费20官银重置任务" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_花费20官银重置任务.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_花费20官银2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_花费20官银2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_花费5官银重置任务2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_花费5官银重置任务2.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_进入香魂冢" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_进入香魂冢.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="npc_林海_卿阎" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\npc_卿阎.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_接受" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\js1582661.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="win_游戏设置" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\win_游戏设置.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="config_游戏设置" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\config_游戏设置.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="btn_全部拾取" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\getWuping.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="move_祭台" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\move_jt.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Npc_cf" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\move_cf.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NPC_仓库掌柜" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPC_仓库掌柜.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NPC_升龙殿传送官" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPC_升龙殿传送官.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NPC_华夏城公告板" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPC_华夏城公告板.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NPC_天界仙官" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPC_天界仙官.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NPC_姜子牙" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPC_姜子牙.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NPC_寄售商人" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPC_寄售商人.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NPC_杂货店掌柜" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPC_杂货店掌柜.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NPC_武器商" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPC_武器商.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NPC_清源长老" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPC_清源长老.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NPC_陈一尘" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPC_陈一尘27210187.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_看看有什么好东西" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_看看有什么好东西.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NPC_驿站车夫" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPC_驿站车夫.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="win_技能窗口" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\win_技能窗口.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="win_技能窗口1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\win_技能窗口1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="jn55854625" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\jn55854625.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="工作技能Tab" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\工作技能Tab.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="act_钱善_exit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\act_钱善_exit.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_领取俸禄" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_领取俸禄.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="对话_领取俸禄" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\对话_领取俸禄.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="领取俸禄退出" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\领取俸禄退出.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="剩余0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\剩余0.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="结束对话" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\结束对话.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="act_钱善_exit_明天再来" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\act_钱善_exit_明天再来.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_zy四品0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_zy四品0.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_zy四品1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_zy四品1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_肥羊列表" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_肥羊列表.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_趁火打劫" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_趁火打劫.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="前往打劫" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\前往打劫.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="close" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\close.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="免费拓印" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\免费拓印.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="黄金拓印" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\黄金拓印.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_今日剩余打劫次数" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_今日剩余打劫次数.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_前往打劫" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_前往打劫.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_打劫4品1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_打劫4品1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="font_打劫剩余0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\font_打劫剩余0.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+</root>

@@ -1,0 +1,13 @@
+D:\Program Files\hproject\qqhx\HXmain\bin\Debug\HXmain.dll
+D:\Program Files\hproject\qqhx\HXmain\bin\Debug\HXmain.pdb
+D:\Program Files\hproject\qqhx\HXmain\bin\Debug\Tool.dll
+D:\Program Files\hproject\qqhx\HXmain\bin\Debug\WSTools.dll
+D:\Program Files\hproject\qqhx\HXmain\bin\Debug\AipSdk.dll
+D:\Program Files\hproject\qqhx\HXmain\bin\Debug\Newtonsoft.Json.dll
+D:\Program Files\hproject\qqhx\HXmain\bin\Debug\Tool.pdb
+D:\Program Files\hproject\qqhx\HXmain\bin\Debug\WSTools.pdb
+D:\Program Files\hproject\qqhx\HXmain\obj\Debug\HXmain.csprojResolveAssemblyReference.cache
+D:\Program Files\hproject\qqhx\HXmain\obj\Debug\HXmain.Properties.Resources.resources
+D:\Program Files\hproject\qqhx\HXmain\obj\Debug\HXmain.csproj.GenerateResource.Cache
+D:\Program Files\hproject\qqhx\HXmain\obj\Debug\HXmain.dll
+D:\Program Files\hproject\qqhx\HXmain\obj\Debug\HXmain.pdb

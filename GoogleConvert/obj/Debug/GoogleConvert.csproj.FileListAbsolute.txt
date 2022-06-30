@@ -1,0 +1,8 @@
+D:\Program Files\hproject\qqhx\GoogleConvert\bin\Debug\GoogleConvert.dll
+D:\Program Files\hproject\qqhx\GoogleConvert\bin\Debug\GoogleConvert.pdb
+D:\Program Files\hproject\qqhx\GoogleConvert\bin\Debug\Newtonsoft.Json.dll
+D:\Program Files\hproject\qqhx\GoogleConvert\obj\Debug\GoogleConvert.csprojResolveAssemblyReference.cache
+D:\Program Files\hproject\qqhx\GoogleConvert\obj\Debug\GoogleConvert.dll
+D:\Program Files\hproject\qqhx\GoogleConvert\obj\Debug\GoogleConvert.pdb
+D:\Program Files\hproject\qqhx\GoogleConvert\bin\Debug\GoogleConvert.dll.CodeAnalysisLog.xml
+D:\Program Files\hproject\qqhx\GoogleConvert\bin\Debug\GoogleConvert.dll.lastcodeanalysissucceeded

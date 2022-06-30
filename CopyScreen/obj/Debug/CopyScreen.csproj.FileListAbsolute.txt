@@ -1,0 +1,8 @@
+D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.csprojResolveAssemblyReference.cache
+D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\qqhx.CopyScreenForm.resources
+D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.Properties.Resources.resources
+D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.csproj.GenerateResource.Cache
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\CopyScreen.exe
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\CopyScreen.pdb
+D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.exe
+D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.pdb

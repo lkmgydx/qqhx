@@ -1,0 +1,2 @@
+D:\Program Files\hproject\qqhx\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
+D:\Program Files\hproject\qqhx\ConsoleApplication1\obj\Debug\ConsoleApplication1.csprojResolveAssemblyReference.cache

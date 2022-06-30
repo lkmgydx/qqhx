@@ -1,0 +1,14 @@
+D:\Program Files\hproject\qqhx\ConsoleApplication2\bin\Debug\ConsoleApplication2.exe
+D:\Program Files\hproject\qqhx\ConsoleApplication2\bin\Debug\ConsoleApplication2.pdb
+D:\Program Files\hproject\qqhx\ConsoleApplication2\obj\Debug\ConsoleApplication2.csprojResolveAssemblyReference.cache
+D:\Program Files\hproject\qqhx\ConsoleApplication2\obj\Debug\ConsoleApplication2.exe
+D:\Program Files\hproject\qqhx\ConsoleApplication2\obj\Debug\ConsoleApplication2.pdb
+D:\Program Files\hproject\qqhx\ConsoleApplication2\bin\Debug\ConsoleApplication2.exe.config
+D:\Program Files\hproject\qqhx\ConsoleApplication2\bin\Debug\Tool.dll
+D:\Program Files\hproject\qqhx\ConsoleApplication2\bin\Debug\AipSdk.dll
+D:\Program Files\hproject\qqhx\ConsoleApplication2\bin\Debug\Newtonsoft.Json.dll
+D:\Program Files\hproject\qqhx\ConsoleApplication2\bin\Debug\WSTools.dll
+D:\Program Files\hproject\qqhx\ConsoleApplication2\bin\Debug\Tool.pdb
+D:\Program Files\hproject\qqhx\ConsoleApplication2\bin\Debug\WSTools.pdb
+D:\Program Files\hproject\qqhx\ConsoleApplication2\obj\Debug\ConsoleApplication2.Properties.Resources.resources
+D:\Program Files\hproject\qqhx\ConsoleApplication2\obj\Debug\ConsoleApplication2.csproj.GenerateResource.Cache
