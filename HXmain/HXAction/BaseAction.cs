@@ -90,7 +90,7 @@ namespace HXmain.HXAction
         /// <summary>
         /// 
         /// </summary>
-        public Delegate HXAction { get; set; }
+        public WSTools.WSThread.ThreadRun HXAction { get; set; }
         /// <summary>
         /// 默认为鼠标左击
         /// </summary>
@@ -274,8 +274,8 @@ namespace HXmain.HXAction
             }
             obj.game.Active();
             HSearchPoint hs = waitImg(obj);
-         
-          
+
+
             if (hs.Success)
             {
                 Clog.log("解析成功");
@@ -284,66 +284,65 @@ namespace HXmain.HXAction
                 {
                     obj.HXAction.Method.Invoke(null, null);
                 }
+
+                Point pt = hs.Point;
+                if (obj.isCenter)
+                {
+                    pt = hs.CenterPoint;
+                }
+                if (obj.FlotPoint != Point.Empty)
+                {
+                    pt = new Point(pt.X + obj.FlotPoint.X, pt.Y + obj.FlotPoint.Y);
+                }
+                if (obj.BeforActionTime != 0)
+                {
+                    KeyBoard.sleep(obj.BeforActionTime);
+                }
+                if (obj.ReverMousePostion)
+                {
+                    Mouse.cacheLocation();
+                }
+                if (obj.game != null)
+                {
+                    Log.log("move ->" + pt);
+                    obj.game.MouseMove(new Point(pt.X - 1, pt.Y + 1));
+                    obj.game.MouseMove(pt);
+                    KeyBoard.sleep(100);
+                }
                 else
                 {
-                    Point pt = hs.Point;
-                    if (obj.isCenter)
-                    {
-                        pt = hs.CenterPoint;
-                    }
-                    if (obj.FlotPoint != Point.Empty)
-                    {
-                        pt = new Point(pt.X + obj.FlotPoint.X, pt.Y + obj.FlotPoint.Y);
-                    }
-                    if (obj.BeforActionTime != 0)
-                    {
-                        KeyBoard.sleep(obj.BeforActionTime);
-                    }
-                    if (obj.ReverMousePostion)
-                    {
-                        Mouse.cacheLocation();
-                    }
-                    if (obj.game != null)
-                    {
-                        Log.log("move ->" + pt);
-                        obj.game.MouseMove(new Point(pt.X - 1, pt.Y + 1));
-                        obj.game.MouseMove(pt);
-                        KeyBoard.sleep(100);
-                    }
-                    else
-                    {
-                        Mouse.move(new Point(pt.X - 1, pt.Y + 1));
-                        Mouse.move(pt);
-                    }
+                    Mouse.move(new Point(pt.X - 1, pt.Y + 1));
+                    Mouse.move(pt);
+                }
 
-                    if (obj.ActionType == ActionType.LeftClick)
-                    {
-                        Mouse.leftclick();
-                    }
-                    else if (obj.ActionType == ActionType.RightClick|| obj.ActionType == ActionType.RigthDbClickNPC)
-                    {
-                        Mouse.rightclick();
-                        KeyBoard.sleep(500);
-                    }
-                    else if (obj.ActionType == ActionType.LeftDbClick)
-                    {
-                        Mouse.dbclick();
-                        KeyBoard.sleep(500);
-                    }
-                    else if (obj.ActionType == ActionType.RigthDbClick)
-                    {
-                        Mouse.rightDbclick();
-                        KeyBoard.sleep(500);
-                    }
-                    if (obj.ReverMousePostion)
-                    {
-                        Mouse.reventLocation();
-                    }
-                }
-                if (obj.AfterWaitTime != 0)
+                if (obj.ActionType == ActionType.LeftClick)
                 {
-                    KeyBoard.sleep(obj.AfterWaitTime);
+                    Mouse.leftclick();
                 }
+                else if (obj.ActionType == ActionType.RightClick || obj.ActionType == ActionType.RigthDbClickNPC)
+                {
+                    Mouse.rightclick();
+                    KeyBoard.sleep(500);
+                }
+                else if (obj.ActionType == ActionType.LeftDbClick)
+                {
+                    Mouse.dbclick();
+                    KeyBoard.sleep(500);
+                }
+                else if (obj.ActionType == ActionType.RigthDbClick)
+                {
+                    Mouse.rightDbclick();
+                    KeyBoard.sleep(500);
+                }
+                if (obj.ReverMousePostion)
+                {
+                    Mouse.reventLocation();
+                }
+            }
+            if (obj.AfterWaitTime != 0)
+            {
+                KeyBoard.sleep(obj.AfterWaitTime);
+
                 return true;
             }
             else
@@ -370,64 +369,74 @@ namespace HXmain.HXAction
             }
         }
 
-        private static HSearchPoint waitImg(BaseAction action, string waitMsg = "等待中...", string sucMsg = "匹配成功!", bool isFind = true)
+        public static HSearchPoint waitImg(BaseAction action, string waitMsg = "等待中...", string sucMsg = "匹配成功!", bool isFind = true)
         {
             int max = Environment.TickCount + action.RunWaitTime;
-            if (action.SameImg.Count == 0)
+            HSearchPoint suc = null;
+            if (action.SameImg == null || action.SameImg.Count == 0)
             {
-                while (true)
-                {
-                    HSearchPoint suc = null;
-                    using (var findimg = action.getScreenBmp())
-                    {
-                        suc = ImageTool.findEqImg(action.Bmp, findimg);
-                    }
+                Task.WaitAll(Task.Run(() =>
+              {
+                  while (true)
+                  {
+                      using (var findimg = action.getScreenBmp())
+                      {
+                          suc = ImageTool.findEqImg(action.Bmp, findimg);
+                      }
 
-                    if (suc.Success == isFind)
-                    {
-                        Console.WriteLine(sucMsg);
-                        return suc;
-                    }
-                    else
-                    {
-                        Console.WriteLine(waitMsg);
-                    }
-                    Mouse.sleep(100);
-                    if (Environment.TickCount > max)
-                    {
-                        return new HSearchPoint(false, Point.Empty, Size.Empty, action.RunWaitTime);
-                    }
-                }
+                      if (suc.Success == isFind)
+                      {
+                          Console.WriteLine(sucMsg);
+                          return suc;
+                      }
+                      else
+                      {
+                          Console.WriteLine(waitMsg);
+                      }
+                      Mouse.sleep(100);
+                      if (action.RunWaitTime > 0 && Environment.TickCount > max)
+                      {
+                          suc = new HSearchPoint(false, Point.Empty, Size.Empty, action.RunWaitTime);
+                          return suc;
+                      }
+                  }
+              }));
+
             }
             else
             {
-                while (true)
+
+                Task.WaitAll(Task.Run(() =>
                 {
-                    using (Bitmap big = action.getScreenBmp())
+                    while (true)
                     {
-                        var suc = ImageTool.findEqImg(action.Bmp, big);
-                        if (suc.Success == isFind)
+                        using (Bitmap big = action.getScreenBmp())
                         {
-                            Console.WriteLine(sucMsg);
-                            return suc;
-                        }
-                        for (int i = 0; i < action.SameImg.Count; i++)
-                        {
-                            suc = ImageTool.findEqImg(action.SameImg[i], big);
-                            if (suc.Success)
+                            suc = ImageTool.findEqImg(action.Bmp, big);
+                            if (suc.Success == isFind)
                             {
+                                Console.WriteLine(sucMsg);
+                                return suc;
+                            }
+                            for (int i = 0; i < action.SameImg.Count; i++)
+                            {
+                                suc = ImageTool.findEqImg(action.SameImg[i], big);
+                                if (suc.Success)
+                                {
+                                    return suc;
+                                }
+                            }
+                            Mouse.sleep(100);
+                            if (action.RunWaitTime > 0 && Environment.TickCount > max)
+                            {
+                                suc = new HSearchPoint(false, Point.Empty, Size.Empty, action.RunWaitTime);
                                 return suc;
                             }
                         }
-                        Mouse.sleep(100);
-                        if (Environment.TickCount > max)
-                        {
-                            return new HSearchPoint(false, Point.Empty, Size.Empty, action.RunWaitTime);
-                        }
                     }
-
-                }
+                }));
             }
+            return suc;
         }
 
         //private static HSearchPoint waitImg(Bitmap [] img, BaseAction action, string waitMsg = "等待中...", string sucMsg = "匹配成功!", bool isFind = true)
@@ -469,7 +478,7 @@ namespace HXmain.HXAction
                     if (hs.Success)
                     {
                         if (clickName)
-                            game.MouseRigthDBClick(new Point(hs.Point.X + 30, hs.Point.Y + 50));
+                            game.MouseRigthDBClick(hs.Point.X + 30, hs.Point.Y + 50);
                         return true;
                     }
                     else
@@ -506,7 +515,7 @@ namespace HXmain.HXAction
             return new HSearchPoint(false, Point.Empty, Size.Empty, 0);
         }
 
-        public static bool waitSucFn(isSucFn fn, int waitTime)
+        public static bool waitSucFn(isSucFn fn, int waitTime=0)
         {
             System.Threading.AutoResetEvent ae = new System.Threading.AutoResetEvent(false);
             bool suc = false;
@@ -521,7 +530,7 @@ namespace HXmain.HXAction
                 {
                     ae.Set();
                 }
-            }, 50);
+            }, 0);
             if (waitTime == 0)
             {
                 ae.WaitOne();

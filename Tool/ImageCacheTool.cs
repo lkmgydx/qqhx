@@ -9,41 +9,82 @@ using WSTools.WSLog;
 
 namespace Tool
 {
+
+    [Serializable]
+    public class ImgInfo
+    {
+        public string Base64ImgStr { get; set; }
+        public string OrcText { get; set; }
+
+        public string Md5Key { get; set; }
+    }
+
+
     public class ImageCacheTool
-    { 
-        public static List<string> getList(string rootPath)
+    {
+        private static string OCRNAME = "hocr.bin";
+        private static Dictionary<string, ImgInfo> DATA;
+        static ImageCacheTool()
         {
-            List<string> keys = new List<string>();
-            if (Directory.Exists(rootPath))
+            if (File.Exists(OCRNAME))
             {
-                string[] dirs = Directory.GetFiles(rootPath);
-                foreach (var file in dirs)
-                {
-                    try
-                    {
-                        string key = getBaseKey((Bitmap)Image.FromFile(file));
-                        if (!keys.Contains(key))
-                        {
-                            keys.Add(key);
-                            //File.Copy(file, @"D:\qqhximg\some\v\" +Path.GetFileName(file));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.logError("加载图片列表!" + file, ex);
-                    }
-                }
+                DATA = WSTools.WSSerialize.BinSerialize.fromFile(OCRNAME) as Dictionary<string, ImgInfo>;
             }
-            return keys;
+            if (DATA == null)
+            {
+                DATA = new Dictionary<string, ImgInfo>();
+            }
         }
 
-        public static string getBaseKey(Bitmap img)
+        static void saveData()
         {
-            using (MemoryStream ms = new MemoryStream())
+            try
             {
-                img.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-                return Convert.ToBase64String(ms.GetBuffer());
+                WSTools.WSSerialize.BinSerialize.toFile(OCRNAME, DATA);
             }
+            catch (Exception ex)
+            {
+                Log.logError("文字识别序列化失败！", ex);
+            }
+        }
+
+        public static string getOrcText(Bitmap bmp)
+        {
+            string key = ImageTool.UUIDImg(bmp);
+            if (DATA.ContainsKey(key))
+            {
+                return DATA[key].OrcText;
+            }
+            else
+            {
+                string tex = BaiDuOcr.getImgText(bmp);
+                if (string.IsNullOrEmpty(tex))
+                {
+                    tex = "识别异常";
+                }
+                else
+                {
+                    string msg = "来自百度自动识别结果:[" + key + ":" + tex + "]";
+                    Console.WriteLine(msg);
+                    WSTools.WSLog.Log.logForce(msg);
+                }
+                ImgInfo ii = new ImgInfo();
+                ii.OrcText = tex;
+                ii.Md5Key = key;
+                ii.Base64ImgStr = ImageTool.getImgBase64(bmp);
+                DATA.Add(ii.Md5Key, ii);
+                saveData();
+                return tex;
+            }
+        }
+
+        public static string getOrcText(string key)
+        {
+            if (DATA.ContainsKey(key))
+            {
+                return DATA[key].OrcText;
+            }
+            return null;
         }
     }
 }

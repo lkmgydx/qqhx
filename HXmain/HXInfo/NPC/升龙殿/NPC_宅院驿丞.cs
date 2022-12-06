@@ -1,20 +1,47 @@
 ﻿using HXmain.HXAction;
 using HXmain.HXInfo.Map;
 using HXmain.Properties;
+using HXmain.Watcher;
+using HXmain.Watcher.Dialog;
+using HXmain.Watcher.NPCAsk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HXmain.Watcher.Dialog.Win宅院驿丞;
 
 namespace HXmain.HXInfo.NPC.升龙殿
 {
     public class NPC_宅院驿丞 : NPCBase
     {
-        public NPC_宅院驿丞() : base(MapBase.升龙殿, "宅院驿丞", new System.Drawing.Point(45, 103))
+        public NPC_宅院驿丞() : base(MapBase.Maps.升龙殿, "宅院驿丞", new System.Drawing.Point(45, 103))
         {
 
         }
+
+        public void newDJ(MainGame game)
+        {
+            if (game == null)
+            {
+                return;
+            }
+            game.ESCSTOP = false;
+            new NPC_升龙殿_宅院驿丞().newCHDJ(game);
+        }
+
+
+        public void newPHB(MainGame game)
+        {
+            if (game == null)
+            {
+                return;
+            }
+            game.ESCSTOP = false;
+            new NPC_升龙殿_宅院驿丞().newPHB(game);
+        }
+
+
         public bool 排行榜任务(MainGame game)
         {
             MoveTo(game);

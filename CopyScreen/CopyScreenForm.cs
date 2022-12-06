@@ -1,137 +1,106 @@
-﻿using HFrameWork.SystemInput;
+﻿using CopyScreen;
+using CopyScreen.Draw;
+using HFrameWork.SystemInput;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static CopyScreen.Utils;
+using static CopyScreen.Config;
 
 namespace qqhx
 {
     public partial class CopyScreenForm : Form
     {
-        Bitmap bmp = null;
 
-
-        public delegate void onSucSelect(Rectangle rec);
-        public event onSucSelect onSucSelectEventHandler;
-
-
-        public delegate void onSucSelect2(Point start, Point end);
+        public delegate void onSucSelect2(Point start, Point end, Rectangle rec, Bitmap img);
         public event onSucSelect2 onSucSelectEventHandler2;
 
-        private static Point SmallImgMargin = new Point(30, 30);//小图间距
 
-        private static Size SmallImgSize = new Size(150, 150);//小图大小
+        HDrawMain drawObj;
 
-        private Rectangle drawRec = Rectangle.Empty;
+        public Color FilterColor { get; set; }
+        public bool EnableFilterColor { get; set; }
+
+        public bool isColorModel { get; set; }
+
         public CopyScreenForm()
         {
             InitializeComponent();
             DoubleBuffered = true;
-            bmp = CopyPriScreenFull();
-            //bmp = CopyPriScreen();
+            TopMost = true;
+            Size = ScreenSize;
         }
 
-        BufferedGraphics hostBuffer;
-        Graphics g;
-        Graphics gg;
+
         private void CopyScreenForm_Load(object sender, EventArgs e)
         {
-            this.Location = Point.Empty;
-            this.Size = bmp.Size;
-            this.BackgroundImage = bmp;
-            g = CreateGraphics();
-            hostBuffer = BufferedGraphicsManager.Current.Allocate(g, DisplayRectangle); //自己管理这块缓冲用的画布
-            gg = hostBuffer.Graphics;
+            Location = Point.Empty;
+            //drawObj = new HDrawMain(this, false, Color.Red);
+            drawObj = new HDrawMain(this, EnableFilterColor, FilterColor);
+
+            TopMost = false;
+            BackgroundImage = drawObj.BackBmp;
         }
 
+        bool waitClose = false;
         private void CopyScreenForm_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-             this.Close();
+            waitClose = true;
+            this.Close();
         }
 
-        private bool isDraw = false;
-        private Point StartPoint = Point.Empty;
-        private Point EndPoint = Point.Empty;
-        private void CopyScreenForm_MouseDown(object sender, MouseEventArgs e)
-        {
-            isDraw = true;
-            StartPoint = new Point(e.X, e.Y);
-            EndPoint = Point.Empty;
-        }
+
 
         private void CopyScreenForm_MouseUp(object sender, MouseEventArgs e)
         {
-            isDraw = false;
+            if (waitClose)
+            {
+                return;
+            }
+            drawObj.onMouseUp(e);
         }
 
-        /// <summary>
-        /// 是否有选择区域
-        /// </summary>
-        private bool hasSelectRange = false;
-
-        private static readonly Size drawSize = new Size(50, 50);
-
-        private void refreshRec(MouseEventArgs e)
+        private void CopyScreenForm_MouseDown(object sender, MouseEventArgs e)
         {
-            if (needReset)
-            {
-                isDraw = true;
-            }
-            if (isDraw)
-            {
-                Cursor = Cursors.Arrow;
-                EndPoint = new Point(e.X, e.Y);
-                drawRec = new Rectangle(StartPoint, new Size(EndPoint.X - StartPoint.X, EndPoint.Y - StartPoint.Y));
-            }
-
-            hasSelectRange = true;
-
-            var drawPoint = isDraw ? EndPoint : Mouse.Location();
-            var rec = new Rectangle(drawPoint.X - drawSize.Width / 2, drawPoint.Y - drawSize.Height / 2, drawSize.Width, drawSize.Height);
-
-            Rectangle rt = new Rectangle(drawPoint.X + SmallImgMargin.X, drawPoint.Y + SmallImgMargin.Y, SmallImgSize.Width, SmallImgSize.Height);
-
-            if (rt.X + rt.Width > Width)
-            {
-                rt.X = rt.X - rt.Width - 100;
-            }
-            if (rt.Y + rt.Height > Height)
-            {
-                rt.Y = rt.Y - rt.Height - 100;
-            }
-
-
-            gg.DrawImage(bmp, Point.Empty);//原背景
-
-            gg.DrawImage(bmp, rt, new Rectangle(drawPoint.X - 25, drawPoint.Y - 25, 50, 50), GraphicsUnit.Pixel);//指针范围的小图
-
-            gg.DrawRectangle(Pens.Black, rt);
-            gg.DrawString(Mouse.Location().ToString(), new Font("宋体", 12), Brushes.Green, Point.Empty);//左上角画上坐标
-            gg.DrawLine(Pens.Red, new Point(rt.X + 75, rt.Y + 25), new Point(rt.X + 75, rt.Y + 150 - 25)); //十字架，横线
-            gg.DrawLine(Pens.Red, new Point(rt.X + 25, rt.Y + 75), new Point(rt.X + 150 - 25, rt.Y + 75));//十字架，竖线
-
-            gg.DrawRectangle(Pens.Red, drawRec);//画个边框
-            hostBuffer.Render(g); //画
-
-            if (needReset)
-            {
-                isDraw = false;
-                needReset = false;
-            }
+            drawObj.OnMouseDown(e);
         }
 
         private void CopyScreenForm_MouseMove(object sender, MouseEventArgs e)
         {
-            refreshRec(e);
+            drawObj.OnMouseMove(e);
         }
 
-        bool needReset = false;
+        private void ReDrawAll(MouseEventArgs e)
+        {
+            //refreshRec(e);
+            drawObj.render();
+            //hostBuffer.Render(g); //画 
+        }
+
+        private void CopyScreenForm_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            drawObj.isShift = e.Shift;
+        }
+
+        private void CopyScreenForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            drawObj.onKeyUp(e);
+            // refreshRec(EndPoint, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 1));
+        }
+
+        /// <summary>
+        /// 鼠标按键处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CopyScreenForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -140,92 +109,93 @@ namespace qqhx
             }
             else if (e.KeyCode == Keys.Escape)
             {
-                this.hasSelectRange = false;
                 this.Close();
             }
             else if (e.KeyCode == Keys.Up)
             {
-                Mouse.moveR(0, -1);
+                HMouse.moveR(0, -1);
             }
             else if (e.KeyCode == Keys.Down)
             {
-                Mouse.moveR(0, 1);
+                HMouse.moveR(0, 1);
             }
             else if (e.KeyCode == Keys.Left)
             {
-                Mouse.moveR(-1, 0);
+                HMouse.moveR(-1, 0);
             }
             else if (e.KeyCode == Keys.Right)
             {
-                Mouse.moveR(1, 0);
+                HMouse.moveR(1, 0);
             }
         }
 
-        private void CopyScreenForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-
-        }
-
+        /// <summary>
+        /// 窗体关闭
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CopyScreenForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (hasSelectRange)
+            if (drawObj.hasSelectRange)
             {
-                if (drawRec == Rectangle.Empty)
+                if (drawObj.DrawMainRec == Rectangle.Empty)
                 {
                     return;
                 }
-                try
-                {
-                    Clipboard.SetImage(bmp.Clone(drawRec, System.Drawing.Imaging.PixelFormat.Format24bppRgb));
 
-                }
-                catch (Exception)
+                using (var bmp = drawObj.CloneImg(drawObj.DrawMainRec))
                 {
-                     
+                    try
+                    {
+                        Application.DoEvents();
+                        Clipboard.SetImage(bmp);
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.ToString();
+                    }
+                    try
+                    {
+                        onSucSelectEventHandler2?.Invoke(drawObj.DrawMainRec.Location, (drawObj.DrawMainRec.Location + drawObj.DrawMainRec.Size), drawObj.DrawMainRec, bmp);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.ToString();
+                    }
                 }
-                 Task.Factory.StartNew(() =>
-                {
-                    //var back = (Bitmap)this.BackgroundImage;
-                    //back = back.Clone(drawRec, back.PixelFormat);
-                    //back.Save("d:/vv.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
-                    onSucSelectEventHandler?.Invoke(drawRec);
-                    onSucSelectEventHandler2?.Invoke(drawRec.Location, (drawRec.Location + drawRec.Size));
-                });
             }
         }
 
-        public static Bitmap CopyPriScreenFull()
+        private void 保存sToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Screen.AllScreens.Length == 1)
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                return CopyPriScreen();
+                var img = drawObj.CloneImg(drawObj.DrawMainRec);
+                img.Save(saveFileDialog1.FileName);
+                Close();
             }
-            Screen[] screens;
-            screens = Screen.AllScreens;
-            int noofscreens = screens.Length, maxwidth = 0, maxheight = 0;
-            for (int i = 0; i < noofscreens; i++)
+        }
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            if (drawObj.hasSelectRange && drawObj.DrawMainRec != Rectangle.Empty)
             {
-                if (maxwidth < (screens[i].Bounds.X + screens[i].Bounds.Width)) maxwidth = screens[i].Bounds.X + screens[i].Bounds.Width;
-                if (maxheight < (screens[i].Bounds.Y + screens[i].Bounds.Height)) maxheight = screens[i].Bounds.Y + screens[i].Bounds.Height;
+                保存sToolStripMenuItem.Enabled = true;
             }
-            Rectangle bounds = new Rectangle(0, 0, maxwidth, maxheight);
-            Bitmap image = new Bitmap(bounds.Width, bounds.Height);
-            using (Graphics g = Graphics.FromImage(image))
+            else
             {
-                g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
+                保存sToolStripMenuItem.Enabled = false;
             }
-            return image;
         }
 
-        public static Bitmap CopyPriScreen()
+        private void 退出EToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Rectangle bounds = Screen.PrimaryScreen.Bounds;
-            Bitmap image = new Bitmap(bounds.Width, bounds.Height);
-            using (Graphics g = Graphics.FromImage(image))
-            {
-                g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
-            }
-            return image;
+            Close();
+        }
+
+        private void CopyScreenForm_Paint(object sender, PaintEventArgs e)
+        {
+            drawObj.render();
         }
     }
 }

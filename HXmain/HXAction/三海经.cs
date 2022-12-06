@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tool;
+using WSTools.WSLog;
 using WSTools.WSThread;
 
 namespace HXmain.HXAction
@@ -25,15 +26,30 @@ namespace HXmain.HXAction
 
             BaseAction.waitSucFn(() =>
             {
-                hs = game.findImg(Resources.dia_山海经);
+                hs = game.findImg(Resources.dia_山海经_o);
                 if (hs.Success)
                 {
                     return hs.Success;
                 }
                 else
                 {
+                    if (game.CloseWin.HasCoseWin)
+                    {
+                        game.CloseWin.closeAll();
+                    }
                     game.SendKey(System.Windows.Forms.Keys.F8);
                     game.sleep(200);
+                    int i = 0;
+                    while (!game.CloseWin.HasCoseWin)
+                    {
+                        i++;
+                        game.sleep(500);
+                        if (i > 10)
+                        {
+                            Log.logWarnForce("超过2秒未检测到窗口,重试" + game.CloseWin.HasCoseWin);
+                            break;
+                        }
+                    }
                 }
                 return false;
             }, 0);
@@ -48,29 +64,10 @@ namespace HXmain.HXAction
 
         private static void mainDo(MainGame game, HSearchPoint hs)
         {
-            // Mouse.cacheLocation();
-
-             game.MouseClick(hs.CenterPoint.X + 175, hs.CenterPoint.Y + 34);
-            //game.MouseClick(hs.CenterPoint.X , hs.CenterPoint.X);
-            //Point pt = game.ToScreenPoint(hs.CenterPoint);
-            //Mouse.move(pt);
-            //Mouse.moveR(175, 34);
-            //Mouse.leftclick();
-            //Mouse.sleep(500);
-
-            //免费拓印
-            var hssh = game.findImg(Resources.免费拓印);
-            if (hssh.Success)
-            {
-                game.MouseClick(hssh.Point.X + 60, hssh.Point.Y + 40);
-            }
-            hssh = game.findImg(Resources.黄金拓印);
-            if (hssh.Success)
-            {
-                game.MouseClick(hssh.Point.X + 60, hssh.Point.Y + 40);
-            }
+            game.MouseClick(hs.CenterPoint.X + 175, hs.CenterPoint.Y + 34);
+            game.clickImg(Resources.免费拓印, 60, 40, true);
+            game.clickImg(Resources.黄金拓印, 60, 40, true);
             game.SendKey(System.Windows.Forms.Keys.F8);
-           // Mouse.reventLocation();
         }
     }
 }

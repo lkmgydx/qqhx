@@ -9,6 +9,7 @@
     using System.IO;
     using System.Text;
     using System.Windows.Forms;
+    using WSTools.WSLog;
 
     public class ImageTool
     {
@@ -148,6 +149,7 @@
 
         public static int COMP_IMG_6X6_TIMES = 0;
 
+
         /// <summary>
         /// 核心找图算法
         /// </summary>
@@ -171,7 +173,6 @@
             {
                 opt = 10;
             }
-            //times[0] = Environment.TickCount - tickCount;
 
             if (imgSmallIn.Width > imgBigIn.Width) //大小图对调
             {
@@ -179,61 +180,58 @@
                 imgSmallIn = imgBigIn;
                 imgBigIn = t;
             }
-            //times[1] = Environment.TickCount - tickCount;
+
+            int compTimes = 0;
 
             using (Bitmap imgSmall = imgSmallIn.Clone(new Rectangle(0, 0, imgSmallIn.Width, imgSmallIn.Height), PixelFormat.Format24bppRgb))
             {
-
-                //times[2] = Environment.TickCount - tickCount;
                 var imgBig = imgBigIn.Clone(new Rectangle(0, 0, imgBigIn.Width, imgBigIn.Height), PixelFormat.Format24bppRgb);
                 using (imgBig)
                 {
-                    //times[3] = Environment.TickCount - tickCount;
                     BitmapData bitSmallData = imgSmall.LockBits(new Rectangle(0, 0, imgSmall.Width, imgSmall.Height), ImageLockMode.ReadWrite, imgSmall.PixelFormat);
                     BitmapData bitBigData = imgBig.LockBits(new Rectangle(0, 0, imgBig.Width, imgBig.Height), ImageLockMode.ReadWrite, imgBig.PixelFormat);
 
-                    //times[4] = Environment.TickCount - tickCount;
                     int maxY = bitBigData.Height - bitSmallData.Height;//最大最高
                     int maxX = bitBigData.Width - bitSmallData.Width;//最大宽度
 
                     int maxFindCount = maxY * maxX;
-                    //int findCount = 0;
-                    int find3x3Count = 0;
-                    //int skip3x3Times = 0;
 
                     times[5] = Environment.TickCount - tickCount;
                     for (int i = 0; i <= maxY; i++)
                     {
                         for (int j = 0; j <= maxX; j++) //一行行开始比对
                         {
-                            find3x3Count++;
-                            if (!filter3X3N(bitBigData, bitSmallData, j, i, opt))
+                            compTimes++;
+                            if (!filter3X3(bitBigData, bitSmallData, j, i))
                             {
-                                //skip3x3Times++;
                                 continue;
                             }
-                            //findCount++;
                             if (filterAll(bitBigData, bitSmallData, j, i, opt))
                             {
                                 times[6] = Environment.TickCount - tickCount;
-                                //for (int v = 0; v < times.Length; v++)
-                                //{
-                                //    if (times[v] != 0)
-                                //        Console.WriteLine("{0} = {1}", v, times[v]);
-                                //}
-                                //Console.WriteLine("maxTime:" + maxFindCount);
-                                //Console.WriteLine("find3x3Count times:" + find3x3Count);
-                                //Console.WriteLine("skip3x3Times times:" + skip3x3Times);
-                                //Console.WriteLine("findCount times:" + findCount);
                                 imgBig.UnlockBits(bitBigData);
                                 imgSmall.UnlockBits(bitSmallData);
-                                return new HSearchPoint(true, new Point(j, i), imgSmall.Size, Environment.TickCount - tickCount);
+                                var r = new HSearchPoint(true, new Point(j, i), imgSmall.Size, Environment.TickCount - tickCount);
+                                Log.logForce("3x3 :" + COMP_IMG_3X3_TIMES);
+                                Log.logForce("IxI :" + COMP_IMG_6X6_TIMES);
+                                Log.logForce("AxA :" + COMP_IMG_TIMES);
+
+                                Log.logForce("[" + compTimes + "]" + "[图片处理超时]:" + r.ToString());
+
+                                return r;
                             }
                         }
                     }
                     imgBig.UnlockBits(bitBigData);
                     imgSmall.UnlockBits(bitSmallData);
-                    return new HSearchPoint(false, ErrorPoint, imgSmall.Size, Environment.TickCount - tickCount);
+
+                    var er = new HSearchPoint(false, ErrorPoint, imgSmall.Size, Environment.TickCount - tickCount);
+
+                    Log.logForce("3x3 :" + COMP_IMG_3X3_TIMES);
+                    Log.logForce("IxI :" + COMP_IMG_6X6_TIMES);
+                    Log.logForce("AxA :" + COMP_IMG_TIMES);
+                    Log.logForce("图片处理超时:[" + compTimes + "] " + er.ToString());
+                    return er;
                 }
             }
         }
@@ -254,42 +252,32 @@
             long[] times = new long[10];
             int tickCount = Environment.TickCount; //初始时间计算
 
-            //times[0] = Environment.TickCount - tickCount;
-
             if (imgSmallIn.Width > imgBigIn.Width) //大小图对调
             {
                 Bitmap t = imgSmallIn;
                 imgSmallIn = imgBigIn;
                 imgBigIn = t;
             }
-            //times[1] = Environment.TickCount - tickCount;
 
             using (Bitmap imgSmall = imgSmallIn.Clone(new Rectangle(0, 0, imgSmallIn.Width, imgSmallIn.Height), PixelFormat.Format24bppRgb))
             {
-
-                //times[2] = Environment.TickCount - tickCount;
                 var imgBig = imgBigIn.Clone(new Rectangle(0, 0, imgBigIn.Width, imgBigIn.Height), PixelFormat.Format24bppRgb);
                 using (imgBig)
                 {
-                    //times[3] = Environment.TickCount - tickCount;
                     BitmapData bitSmallData = imgSmall.LockBits(new Rectangle(0, 0, imgSmall.Width, imgSmall.Height), ImageLockMode.ReadWrite, imgSmall.PixelFormat);
                     BitmapData bitBigData = imgBig.LockBits(new Rectangle(0, 0, imgBig.Width, imgBig.Height), ImageLockMode.ReadWrite, imgBig.PixelFormat);
 
-                    //times[4] = Environment.TickCount - tickCount;
                     int maxY = bitBigData.Height - bitSmallData.Height;//最大最高
                     int maxX = bitBigData.Width - bitSmallData.Width;//最大宽度
 
                     int maxFindCount = maxY * maxX;
-                    //int findCount = 0;
-                    int find3x3Count = 0;
-                    //int skip3x3Times = 0;
 
                     times[5] = Environment.TickCount - tickCount;
                     for (int i = 0; i <= maxY; i++)
                     {
                         for (int j = 0; j <= maxX; j++) //一行行开始比对
                         {
-                            find3x3Count++;
+                            //find3x3Count++;
                             if (!filter3X3N(bitBigData, bitSmallData, j, i, 100))
                             {
                                 //skip3x3Times++;
@@ -308,7 +296,7 @@
                                 //Console.WriteLine("find3x3Count times:" + find3x3Count);
                                 //Console.WriteLine("skip3x3Times times:" + skip3x3Times);
                                 //Console.WriteLine("findCount times:" + findCount);
-                               // imgBig.UnlockBits(bitBigData);
+                                // imgBig.UnlockBits(bitBigData);
                                 //imgSmall.UnlockBits(bitSmallData);
 
                                 liRst.Add(new HSearchPoint(true, new Point(j, i), imgSmall.Size, Environment.TickCount - tickCount));
@@ -322,38 +310,6 @@
             }
         }
 
-        public static string getNum(string img)
-        {
-
-            //var APP_ID = "20375427";
-            // var API_KEY = "MHUExwHYSu7KTdiK6VdlN46G";
-            // var SECRET_KEY = "Fa5GMQAOumLPDKNAlmdsEhUfmzTunAOM";
-            System.Net.WebClient wc = new System.Net.WebClient();
-
-            // var client = new Baidu.Aip.Ocr.Ocr(API_KEY, SECRET_KEY);
-            // client.Timeout = 60000;  // 修改超时时间
-            //var image = File.ReadAllBytes("图片文件路径");
-            // 调用通用文字识别, 图片参数为本地图片，可能会抛出网络等异常，请使用try/catch捕获
-            // var result =  client.GeneralBasic(image);
-            var result = "";
-            // Console.WriteLine(result);
-            //        // 如果有可选参数
-            //        var options = new Dictionary<string, object>{
-            //    {"language_type", "CHN_ENG"},
-            //    {"detect_direction", "true"},
-            //    {"detect_language", "true"},
-            //    {"probability", "true"}
-            //};
-            //        // 带参数调用通用文字识别, 图片参数为本地图片
-            //        result = client.GeneralBasic(image, options);
-            Console.WriteLine(result);
-            return "";
-        }
-
-        private static unsafe bool canGo(byte* pt)
-        {
-            return true;
-        }
 
         private static unsafe Bitmap CopyImg(Bitmap bmp, int y, int height)
         {
@@ -629,7 +585,12 @@
         /// <returns></returns>
         public static HSearchPoint findLikeImg(Bitmap imgSmallIn, Bitmap imgBigIn, int op = 100)
         {
-            return findLikeImg(imgSmallIn, imgBigIn, 20, 20, op);
+            HSearchPoint hp = findLikeImg(imgSmallIn, imgBigIn, 20, 20, op);
+            if (hp.Success)
+            {
+                Console.WriteLine("suc TIME:" + hp);
+            }
+            return hp;
         }
 
         public static bool hasSomeOne(Bitmap bmp)
@@ -641,6 +602,12 @@
             return HasSomeObj.HasSome(bmp);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitData"></param>
+        /// <param name="color"></param>
+        /// <returns></returns>
         private static unsafe Point[] filterColor(BitmapData bitData, Color color)
         {
             int stepBig = bitData.Stride / bitData.Width;
@@ -687,29 +654,45 @@
             var smallPtr = (byte*)bitSmallData.Scan0;
 
             //未命中数量
-            int missCountTemp = 0;
+            //int missCountTemp = 0;
             //最大未命中数量
             int maxError = bitSmallData.Width * bitSmallData.Height * (100 - opt) / 100;
             maxError = 5;
-            for (int y = 0; y < bitSmallData.Height; y++)
+
+
+            int hx = bitSmallData.Width / 2;
+            int hy = bitSmallData.Height / 2;
+
+            int mx = bitSmallData.Width - 1;
+            int my = bitSmallData.Height - 1;
+
+            var arx = new int[] { hx, 0, mx };
+            var ary = new int[] { 0, hy, my };
+            for (int d1 = 0; d1 < 3; d1++)
             {
-                for (int x = 0; x < bitSmallData.Width; x++)
+                for (int d2 = 0; d2 < 3; d2++)
                 {
+                    int y = ary[d1]; int x = arx[d2];
+
                     COMP_IMG_TIMES++;
                     COMP_IMG_3X3_TIMES++;
                     var ptrTempSmall = bitSmallData.Stride * y + x * stepSmall;
                     var ptrTempBit = bitBigData.Stride * (y + fy) + (x + fx) * stepBig;
-                    if (bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++] || bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++] || bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++])
+                    if (!isEqMemoery(bigPtr, smallPtr, ptrTempBit, ptrTempSmall))
+                    //if (bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++] || bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++] || bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++])
                     {
-                        if (missCountTemp >= maxError)
-                        {
-                            return false;
-                        }
-                        missCountTemp++;
+                        return false;
                     }
                 }
             }
             return true;
+        }
+
+        private static unsafe bool isEqMemoery(byte* bt1, byte* bt2, int startx, int starty)
+        {
+            int x = 0;
+            int y = 0;
+            return bt1[startx + x++] == bt2[starty + y++] && bt1[startx + x++] == bt2[starty + y++] && bt1[startx + x++] == bt2[starty + y++];
         }
 
 
@@ -736,11 +719,6 @@
                     if (bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++] || bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++] || bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++])
                     {
                         return false;
-                        //if (missCountTemp >= 6)
-                        //{
-                        //    return false;
-                        //}
-                        //missCountTemp++;
                     }
                 }
             }
@@ -789,8 +767,7 @@
             var bigPtr = (byte*)bitBigData.Scan0;
             var smallPtr = (byte*)bitSmallData.Scan0;
 
-            //未命中数量
-            int missCountTemp = 0;
+
             //最大未命中数量
             int maxError = bitSmallData.Width * bitSmallData.Height * (100 - opt) / 100;
             maxError = 5;
@@ -804,12 +781,14 @@
                     var ptrTempSmall = bitSmallData.Stride * y + x * stepSmall;
                     var ptrTempBit = bitBigData.Stride * (y + fy) + (x + fx) * stepBig;
                     if (bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++] || bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++] || bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++])
+                    //if (bigPtr[ptrTempBit++] != smallPtr[ptrTempSmall++])
                     {
-                        if (missCountTemp >= maxError)
-                        {
-                            return false;
-                        }
-                        missCountTemp++;
+                        return false;
+                        //if (missCountTemp >= maxError)
+                        //{
+                        //    return false;
+                        //}
+                        //missCountTemp++;
                     }
                 }
             }
@@ -911,117 +890,92 @@
         public static unsafe HSearchPoint findLikeImg(Bitmap imgSmallIn, Bitmap imgBigIn, int xCount, int yCount, int opset)
         {
             return findEqImg(imgSmallIn, imgBigIn, opset);
-            int tickCount = Environment.TickCount;
+            //int tickCount = Environment.TickCount;
 
-            if (imgSmallIn.Width > imgBigIn.Width)
-            {
-                Bitmap t = imgSmallIn;
-                imgSmallIn = imgBigIn;
-                imgBigIn = t;
-            }
+            //if (imgSmallIn.Width > imgBigIn.Width)
+            //{
+            //    Bitmap t = imgSmallIn;
+            //    imgSmallIn = imgBigIn;
+            //    imgBigIn = t;
+            //}
 
-            using (Bitmap imgSmall = imgSmallIn.Clone(new Rectangle(0, 0, imgSmallIn.Width, imgSmallIn.Height), PixelFormat.Format8bppIndexed))
-            {
-                using (Bitmap imgBig = imgBigIn.Clone(new Rectangle(0, 0, imgBigIn.Width, imgBigIn.Height), PixelFormat.Format8bppIndexed))
-                {
-                    BitmapData bitSmallData = imgSmall.LockBits(new Rectangle(0, 0, imgSmall.Width, imgSmall.Height), ImageLockMode.ReadWrite, imgSmall.PixelFormat);
-                    BitmapData bitBigData = imgBig.LockBits(new Rectangle(0, 0, imgBig.Width, imgBig.Height), ImageLockMode.ReadWrite, imgBig.PixelFormat);
-                    byte* smallPtr = (byte*)bitSmallData.Scan0;
-                    byte* bigPtr = (byte*)bitBigData.Scan0;
+            //using (Bitmap imgSmall = imgSmallIn.Clone(new Rectangle(0, 0, imgSmallIn.Width, imgSmallIn.Height), imgSmall.PixelFormat))
+            //{
+            //    using (Bitmap imgBig = imgBigIn.Clone(new Rectangle(0, 0, imgBigIn.Width, imgBigIn.Height), imgBig.PixelFormat))
+            //    {
+            //        BitmapData bitSmallData = imgSmall.LockBits(new Rectangle(0, 0, imgSmall.Width, imgSmall.Height), ImageLockMode.ReadWrite, imgSmall.PixelFormat);
+            //        BitmapData bitBigData = imgBig.LockBits(new Rectangle(0, 0, imgBig.Width, imgBig.Height), ImageLockMode.ReadWrite, imgBig.PixelFormat);
+            //        byte* smallPtr = (byte*)bitSmallData.Scan0;
+            //        byte* bigPtr = (byte*)bitBigData.Scan0;
 
-                    int stepSmall = bitSmallData.Stride / bitSmallData.Width;
-                    int stepBig = bitBigData.Stride / bitBigData.Width;
+            //        int stepSmall = bitSmallData.Stride / bitSmallData.Width;
+            //        int stepBig = bitBigData.Stride / bitBigData.Width;
 
-                    int xLen = Math.Min(bitSmallData.Width, xCount);// (bitSmallData.Width < xCount) ? bitSmallData.Width : xCount;
-                    int yLen = Math.Min(bitSmallData.Height, yCount);// (bitSmallData.Height < yCount) ? bitSmallData.Height : yCount;
+            //        //int xLen = Math.Min(bitSmallData.Width, xCount);// (bitSmallData.Width < xCount) ? bitSmallData.Width : xCount;
+            //        //int yLen = Math.Min(bitSmallData.Height, yCount);// (bitSmallData.Height < yCount) ? bitSmallData.Height : yCount;
 
-                    float xFlex = bitSmallData.Width / xLen;
-                    float yFlex = bitSmallData.Height / yLen;
+            //        //float xFlex = bitSmallData.Width / xLen;
+            //        //float yFlex = bitSmallData.Height / yLen;
 
-                    int[][] dyArrary = new int[][] { new int[xLen], new int[yLen] };
-                    PL pl = new PL(dyArrary, new PP[yLen, xLen]);
-                    for (int i = 0; i < yLen; i++)
-                    {
-                        pl.pl[1][i] = (int)(i * yFlex);
-                    }
-                    for (int j = 0; j < xLen; j++)
-                    {
-                        pl.pl[0][j] = (int)(j * xFlex);
-                    }
-                    for (int i = 0; i < yLen; i++)
-                    {
-                        for (int j = 0; j < xLen; j++)
-                        {
-                            long stepTemp = (pl.pl[1][i] * bitSmallData.Stride) + (pl.pl[0][j] * stepSmall);
-                            pl.pp[i, j] = new PP(smallPtr[(int)((byte*)stepTemp)], smallPtr[(int)((byte*)(stepTemp + 1))], smallPtr[(int)((byte*)(stepTemp + 2))]);
-                        }
-                    }
+            //        //int[][] dyArrary = new int[][] { new int[xLen], new int[yLen] };
+            //        //PL pl = new PL(dyArrary, new PP[yLen, xLen]);
+            //        //for (int i = 0; i < yLen; i++)
+            //        //{
+            //        //    pl.pl[1][i] = (int)(i * yFlex);
+            //        //}
+            //        //for (int j = 0; j < xLen; j++)
+            //        //{
+            //        //    pl.pl[0][j] = (int)(j * xFlex);
+            //        //}
+            //        //for (int i = 0; i < yLen; i++)
+            //        //{
+            //        //    for (int j = 0; j < xLen; j++)
+            //        //    {
+            //        //        long stepTemp = (pl.pl[1][i] * bitSmallData.Stride) + (pl.pl[0][j] * stepSmall);
+            //        //        pl.pp[i, j] = new PP(smallPtr[(int)((byte*)stepTemp)], smallPtr[(int)((byte*)(stepTemp + 1))], smallPtr[(int)((byte*)(stepTemp + 2))]);
+            //        //    }
+            //        //}
 
-                    int op = 0;
-                    if (opset > 95 || opset <= 0)
-                    {
-                        op = 95;
-                    }
-                    else
-                    {
-                        op = opset;
-                    }
-                    op = ((xLen * yLen) * (op % 100)) / 100;
-                    long missCount = 0L;
-                    int maxX = bitBigData.Height - bitSmallData.Height;
-                    int maxY = bitBigData.Width - bitSmallData.Width;
-                    long num20 = 0L;
-                    Point point = new Point(0, 0);
-                    int stepXtemp = bitSmallData.Width / 3;
-                    int stepYtemp = bitSmallData.Height / 3;
-                    for (int i = 0; i <= maxX; i++)
-                    {
-                        for (int j = 0; j <= maxY; j++)
-                        {
-                            long tempValue = (j * stepBig) + (i * bitBigData.Stride);
-                            if (((Math.Abs(pl.pp[0, 0].r - bigPtr[tempValue]) <= 10) && (Math.Abs(pl.pp[0, 0].g - bigPtr[tempValue + 1]) <= 10)) && (Math.Abs((pl.pp[0, 0].b - bigPtr[tempValue + 2])) <= 10))
-                            {
-                                if (!filter3X3(bitBigData, bitSmallData, j, i))
-                                {
-                                    continue;
-                                }
-                                if (filterAll(bitBigData, bitSmallData, j, i, op))
-                                {
-                                    imgBig.UnlockBits(bitBigData);
-                                    imgSmall.UnlockBits(bitSmallData);
-                                    return new HSearchPoint(true, new Point(j, i), imgSmall.Size, Environment.TickCount - tickCount);
-                                }
-                                //missCount = 0L;
-                                //for (int k = 0; k < yLen; k++)
-                                //{
-                                //    for (int m = 0; m < xLen; m++)
-                                //    {
-                                //        long num26 = (tempValue + (pl.pl[0][m] * stepBig)) + (pl.pl[1][k] * bitBigData.Stride);
-                                //        if (missCount >= op)
-                                //        {
-                                //            imgBig.UnlockBits(bitBigData);
-                                //            imgSmall.UnlockBits(bitSmallData);
-                                //            return new HSearchPoint(true, new Point(j, i), imgSmall.Size, Environment.TickCount - tickCount);
-                                //        }
-                                //        if ((pl.pp[k, m].r == bigPtr[num26]) && (pl.pp[k, m].g == bigPtr[num26 + 1]) && (pl.pp[k, m].b == bigPtr[num26 + 2]))
-                                //        {
-                                //            missCount++;
-                                //            if (((point.X != j) || (point.Y != i)) && (missCount > num20))
-                                //            {
-                                //                num20 = missCount;
-                                //                point = new Point(j, i);
-                                //            }
-                                //        }
-                                //    }
-                                //}
-                            }
-                        }
-                    }
-                    imgBig.UnlockBits(bitBigData);
-                    imgSmall.UnlockBits(bitSmallData);
-                    return new HSearchPoint(false, ErrorPoint, imgSmall.Size, Environment.TickCount - tickCount);
-                }
-            }
+            //        int op = 100;
+            //        //if (opset > 95 || opset <= 0)
+            //        //{
+            //        //    op = 95;
+            //        //}
+            //        //else
+            //        //{
+            //        //    op = opset;
+            //        //}
+            //        //op = ((xLen * yLen) * (op % 100)) / 100;
+            //        int maxX = bitBigData.Height - bitSmallData.Height;
+            //        int maxY = bitBigData.Width - bitSmallData.Width;
+            //        // Point point = new Point(0, 0);
+            //        // int stepXtemp = bitSmallData.Width / 3;
+            //        // int stepYtemp = bitSmallData.Height / 3;
+            //        for (int i = 0; i <= maxX; i++)
+            //        {
+            //            for (int j = 0; j <= maxY; j++)
+            //            {
+            //                long tempValue = (j * stepBig) + (i * bitBigData.Stride);
+            //                //if (((Math.Abs(pl.pp[0, 0].r - bigPtr[tempValue]) <= 10) && (Math.Abs(pl.pp[0, 0].g - bigPtr[tempValue + 1]) <= 10)) && (Math.Abs((pl.pp[0, 0].b - bigPtr[tempValue + 2])) <= 10))
+            //                {
+            //                    if (!filter3X3(bitBigData, bitSmallData, j, i))
+            //                    {
+            //                        continue;
+            //                    }
+            //                    if (filterAll(bitBigData, bitSmallData, j, i, op))
+            //                    {
+            //                        imgBig.UnlockBits(bitBigData);
+            //                        imgSmall.UnlockBits(bitSmallData);
+            //                        return new HSearchPoint(true, new Point(j, i), imgSmall.Size, Environment.TickCount - tickCount);
+            //                    }
+            //                }
+            //            }
+            //        }
+            //        imgBig.UnlockBits(bitBigData);
+            //        imgSmall.UnlockBits(bitSmallData);
+            //        return new HSearchPoint(false, ErrorPoint, imgSmall.Size, Environment.TickCount - tickCount);
+            //    }
+            //}
         }
 
         private static unsafe bool compareAll(PL pl, int yLen, int xLen, long tempValue, int stepBig, byte* bigPtr, BitmapData bitBigData)
@@ -1286,119 +1240,147 @@
             return new Point(Convert.ToInt32(strArray[0]), Convert.ToInt32(strArray[1]));
         }
 
-        public static unsafe Point pri_like100(Bitmap img0, Bitmap img1, int op)
+
+        public static unsafe Bitmap filterBmp(Bitmap bmp, Color c)
         {
-            if (img0 == img1)
-            {
-                return new Point(0, 0);
-            }
-            Rectangle rect = new Rectangle(0, 0, img0.Width, img0.Height);
-            Rectangle rectangle2 = new Rectangle(0, 0, img1.Width, img1.Height);
-            BitmapData bitmapdata = img1.LockBits(rectangle2, ImageLockMode.ReadWrite, img1.PixelFormat);
-            BitmapData data2 = img0.LockBits(rect, ImageLockMode.ReadWrite, img0.PixelFormat);
-            byte* numPtr = (byte*)data2.Scan0;
-            byte* numPtr2 = (byte*)bitmapdata.Scan0;
-            int num = (data2.Stride * 3) / 30;
-            int num2 = data2.Height / 10;
-            long num3 = 0L;
-            for (int i = 0; i <= (bitmapdata.Height - data2.Height); i++)
-            {
-                for (int j = 0; j <= (bitmapdata.Width - data2.Width); j++)
-                {
-                    num3 = 0L;
-                    for (int k = 0; k < 10; k++)
-                    {
-                        for (int m = 0; m < 10; m++)
-                        {
-                            if (num3 >= op)
-                            {
-                                img1.UnlockBits(bitmapdata);
-                                img0.UnlockBits(data2);
-                                return new Point(j, i);
-                            }
-                            long num8 = ((num * m) + (j * 3)) + ((i + (k * num2)) * bitmapdata.Stride);
-                            long num9 = (num * m) + ((k * data2.Stride) * num2);
-                            num9 += 1L;
-                            num8 += 1L;
-                            if (Math.Abs((int)(numPtr[(int)num9] - numPtr2[(int)num8])) < 20)
-                            {
-                                num9 += 1L;
-                                num8 += 1L;
-                                if (Math.Abs((int)(numPtr[(int)num9] - numPtr2[(int)num8])) < 20)
-                                {
-                                    num9 += 1L;
-                                    num8 += 1L;
-                                    if (Math.Abs((int)(numPtr[(int)num9] - numPtr2[(int)num8])) < 20)
-                                    {
-                                        num3 += 1L;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            img1.UnlockBits(bitmapdata);
-            img0.UnlockBits(data2);
-            return new Point(-1, -1);
+            return filterBmp(bmp, c, c);
         }
 
-        public static unsafe List<Point> pri_like100list(Bitmap img0, Bitmap img1, int op)
+        /// <summary>
+        /// 将图片剪切成指定大小
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public static unsafe Bitmap cutBmp(Bitmap bmp)
         {
-            List<Point> list = new List<Point>();
-            if (img0 != img1)
+            return null;
+        }
+
+        /// <summary>
+        /// 将图片过滤，只选取指定颜色
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <param name="c"></param>
+        /// <param name="c2"></param>
+        /// <returns></returns>
+        public static unsafe Bitmap filterBmp(Bitmap bmp, Color c, Color c2)
+        {
+            Bitmap rst = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format24bppRgb);
+            var rec = new Rectangle(0, 0, bmp.Width, bmp.Height);
+
+            using (Bitmap copybmp = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), PixelFormat.Format24bppRgb))
             {
-                Rectangle rect = new Rectangle(0, 0, img0.Width, img0.Height);
-                Rectangle rectangle2 = new Rectangle(0, 0, img1.Width, img1.Height);
-                BitmapData bitmapdata = img1.LockBits(rectangle2, ImageLockMode.ReadWrite, img1.PixelFormat);
-                BitmapData data2 = img0.LockBits(rect, ImageLockMode.ReadWrite, img0.PixelFormat);
-                byte* numPtr = (byte*)data2.Scan0;
-                byte* numPtr2 = (byte*)bitmapdata.Scan0;
-                int num = (data2.Stride * 3) / 30;
-                int num2 = data2.Height / 10;
-                long num3 = 0L;
-                int x = 0;
-                for (int i = 0; i < (bitmapdata.Height - data2.Height); i++)
-                {
-                    for (x = 0; x < (bitmapdata.Width - data2.Width); x++)
+                BitmapData bitmapData = copybmp.LockBits(rec, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+                BitmapData rstData = rst.LockBits(rec, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+
+                byte* ptrS = (byte*)bitmapData.Scan0;
+                byte* ptrRst = (byte*)rstData.Scan0;
+
+                var step = (int)Math.Floor(bitmapData.Stride * 1.0 / bitmapData.Width);
+
+                for (int y = 0; y < bitmapData.Height; y++)
+                    for (int x = 0; x < bitmapData.Width; x++)
                     {
-                        num3 = 0L;
-                        for (int j = 0; j < 10; j++)
+                        var b = x * step + y * bitmapData.Stride;
+                        var g = b + 1;
+                        var r = g + 1;
+
+                        if (ptrS[r] == c.R && ptrS[g] == c.G && ptrS[b] == c.B)
                         {
-                            for (int k = 0; k < 10; k++)
-                            {
-                                if (num3 >= op)
-                                {
-                                    list.Add(new Point(x, i));
-                                    x++;
-                                    continue;
-                                }
-                                long num8 = ((num * k) + (x * 3)) + ((i + (j * num2)) * bitmapdata.Stride);
-                                long num9 = (num * k) + ((j * data2.Stride) * num2);
-                                num9 += 1L;
-                                num8 += 1L;
-                                if (Math.Abs((int)(numPtr[(int)num9] - numPtr2[(int)num8])) < 10)
-                                {
-                                    num9 += 1L;
-                                    num8 += 1L;
-                                    if (Math.Abs((int)(numPtr[(int)num9] - numPtr2[(int)num8])) < 10)
-                                    {
-                                        num9 += 1L;
-                                        num8 += 1L;
-                                        if (Math.Abs((int)(numPtr[(int)num9] - numPtr2[(int)num8])) < 10)
-                                        {
-                                            num3 += 1L;
-                                        }
-                                    }
-                                }
-                            }
+                            ptrRst[b] = c2.B;
+                            ptrRst[g] = c2.G;
+                            ptrRst[r] = c2.R;
                         }
                     }
-                }
-                img1.UnlockBits(bitmapdata);
-                img0.UnlockBits(data2);
+
+                copybmp.UnlockBits(bitmapData);
+                rst.UnlockBits(rstData);
             }
-            return list;
+
+            return rst;
+        }
+
+        public static unsafe ImageColorInfo filterBmpInfo(Bitmap bmp, Color c)
+        {
+            List<Point> lip = new List<Point>();
+            Bitmap rst = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format24bppRgb);
+            var rec = new Rectangle(0, 0, bmp.Width, bmp.Height);
+
+            using (Bitmap copybmp = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), PixelFormat.Format24bppRgb))
+            {
+                BitmapData bitmapData = copybmp.LockBits(rec, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+                BitmapData rstData = rst.LockBits(rec, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+
+                byte* ptrS = (byte*)bitmapData.Scan0;
+                byte* ptrRst = (byte*)rstData.Scan0;
+
+                var step = (int)Math.Floor(bitmapData.Stride * 1.0 / bitmapData.Width);
+
+                for (int y = 0; y < bitmapData.Height; y++)
+                    for (int x = 0; x < bitmapData.Width; x++)
+                    {
+                        var b = x * step + y * bitmapData.Stride;
+                        var g = b + 1;
+                        var r = g + 1;
+
+                        if (ptrS[r] == c.R && ptrS[g] == c.G && ptrS[b] == c.B)
+                        {
+                            ptrRst[b] = c.B;
+                            ptrRst[g] = c.G;
+                            ptrRst[r] = c.R;
+                            lip.Add(new Point(x, y));
+                        }
+                    }
+                copybmp.UnlockBits(bitmapData);
+                rst.UnlockBits(rstData);
+            }
+
+            return new ImageColorInfo(rst, lip, c);
+        }
+
+        /// <summary>
+        /// 指定图片区域信息
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <param name="c"></param>
+        /// <param name="minLength"></param>
+        /// <returns></returns>
+        public static unsafe ImageColorInfo filterBmpInfoColorLength(Bitmap bmp, Color c, int minLength)
+        {
+            List<Point> lip = new List<Point>();
+            Bitmap rst = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format24bppRgb);
+            var rec = new Rectangle(0, 0, bmp.Width, bmp.Height);
+
+            using (Bitmap copybmp = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), PixelFormat.Format24bppRgb))
+            {
+                BitmapData bitmapData = copybmp.LockBits(rec, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+                BitmapData rstData = rst.LockBits(rec, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+
+                byte* ptrS = (byte*)bitmapData.Scan0;
+                byte* ptrRst = (byte*)rstData.Scan0;
+
+                var step = (int)Math.Floor(bitmapData.Stride * 1.0 / bitmapData.Width);
+
+                for (int y = 0; y < bitmapData.Height; y++)
+                    for (int x = 0; x < bitmapData.Width; x++)
+                    {
+                        var b = x * step + y * bitmapData.Stride;
+                        var g = b + 1;
+                        var r = g + 1;
+
+                        if (ptrS[r] == c.R && ptrS[g] == c.G && ptrS[b] == c.B)
+                        {
+                            ptrRst[b] = c.B;
+                            ptrRst[g] = c.G;
+                            ptrRst[r] = c.R;
+                            lip.Add(new Point(x, y));
+                        }
+                    }
+                copybmp.UnlockBits(bitmapData);
+                rst.UnlockBits(rstData);
+            }
+
+            return new ImageColorInfo(rst, lip, c);
         }
 
         public static unsafe Point prit_likeSmall(Bitmap img0, Bitmap img1, int op)

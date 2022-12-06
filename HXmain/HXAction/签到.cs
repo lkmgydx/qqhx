@@ -19,7 +19,7 @@ namespace HXmain.HXAction
         /// <returns></returns>
         static HSearchPoint hasQDWin(MainGame game)
         {
-            return ImageTool.findEqImg(Resources.win_每日签到, game.getImg());
+            return game.findImg(Resources.win_每日签到);
         }
         public static void 开始签到(MainGame game)
         {
@@ -32,15 +32,13 @@ namespace HXmain.HXAction
             HSearchPoint qd = null;
             if (!search.Success)
             {
-                qd = ImageTool.findEqImg(Resources.签到, game.getImg());
+                qd = game.clickImg(Resources.签到);
                 if (!qd.Success)
                 {
                     Clog.log("未找到签到框，退出!");
                     Mouse.reventLocation();
                     return;
                 }
-                game.MouseMove(qd.CenterPoint);
-                Mouse.leftclick();
             }
             bool suc = BaseAction.waitSucFn(() =>
             {

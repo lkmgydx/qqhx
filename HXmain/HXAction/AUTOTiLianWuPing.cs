@@ -71,27 +71,23 @@ namespace HXmain.HXAction
                 return;
             }
             isE = true;
-            game.lockUtil.getTopLock();
-            //game.getTopLock();
-            var item = new WuPingLanInfo(game);
-            var wu = item.WuPings();
-            var canTilians = 0;
-            foreach (var i in wu)
-            {
-                if (i.CanTiLian)
-                {
-                    canTilians++;
-                }
-            }
-            Log.logForce("自动数量:" + canTilians);
 
-            if (canTilians >= 5)
+            game.TopRun(() =>
             {
+                var item = new WuPingLanInfo(game);
+                var wu = item.WuPings();
+                var canTilians = 0;
+                foreach (var i in wu)
+                {
+                    if (i.CanTiLian)
+                    {
+                        canTilians++;
+                    }
+                }
+                Log.logForce("自动数量:" + canTilians);
                 item.TilianAllForce();
-            }
-            game.closeAllGameWin();
-            game.lockUtil.ReleaseLock();
-            // game.ReleaseTopLock();
+                game.closeAllGameWin();
+            }, true);
         }
 
         private void Game_onPowerStop()

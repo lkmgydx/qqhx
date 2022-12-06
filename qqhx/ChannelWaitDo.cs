@@ -116,10 +116,12 @@ namespace qqhx
                             if (!li[i].isDbClick)
                             {
                                 Mouse.leftclick();
+                                Mouse.sleep(500);
                             }
                             else
                             {
                                 Mouse.dbclick();
+                                Mouse.sleep(100);
                             }
                             Mouse.reventLocation();
                             if (li[i].SucExit)

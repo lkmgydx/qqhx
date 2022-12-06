@@ -27,23 +27,30 @@ namespace HXmain.HXAction
             {
                 return hs;
             }
-            game.MouseMove(890, 785);//点击设置
-            Mouse.sleep(200);
-            Mouse.leftclick();
-            BaseAction.waitSucFn(() =>
-            {
-                hs = game.findImg(Resources.config_游戏设置);
-                return hs.Success;
-            }, 10000);
+            game.MouseClick(890, 785);//点击设置
+                                      //game.MouseMove(890, 785);
+                                      //Mouse.sleep(200);
+                                      //Mouse.leftclick();
+            var suc = BaseAction.waitSucFn(() =>
+             {
+                 hs = game.findImg(Resources.config_游戏设置);
+                 return hs.Success;
+             }, 3000);
 
-            game.MouseMove(620, 350); //点击游戏设置
-            game.MouseClick();
+            if (!suc)
+            {
+                return HSearchPoint.Empty;
+            }
+
+            game.MouseClick(620, 350); //点击游戏设置
+            //game.MouseMove(620, 350); //点击游戏设置
+            //game.MouseClick();
 
             BaseAction.waitSucFn(() =>
             {
                 hs = game.findImg(Resources.win_游戏设置);
                 return hs.Success;
-            }, 1000);
+            }, 3000);
             return hs;
         }
 
@@ -55,43 +62,31 @@ namespace HXmain.HXAction
         /// <returns></returns>
         public static bool setHidePerson(MainGame game, bool hide = true)
         {
-            Mouse.cacheLocation();
-            try
+            game.Active();
+            HSearchPoint hs = openConfig(game);
+            if (!hs.Success)
             {
-                HSearchPoint hs = openConfig(game);
-                if (!hs.Success)
-                {
-                    return false;
-                }
-                Point p = new Point(hs.CenterPoint.X + 85, hs.CenterPoint.Y + 100);
+                return false;
+            }
+            Point p = new Point(hs.CenterPoint.X + 85, hs.CenterPoint.Y + 100);
 
-                using (var img = game.getImg(new System.Drawing.Rectangle(p, CHECKSIZE)))
+            using (var img = game.getImg(new System.Drawing.Rectangle(p, CHECKSIZE)))
+            {
+                if (hide == (CHECKID == ImageTool.UUIDImg(img)))//选 中状态
                 {
-                    if (hide == (CHECKID == ImageTool.UUIDImg(img)))//选 中状态
-                    {
-                        game.MouseClick(new Point(hs.CenterPoint.X + 78, hs.CenterPoint.Y + 328));
-                        return true;
-                    }
+                    game.MouseClick(new Point(hs.CenterPoint.X + 78, hs.CenterPoint.Y + 328));
+                    return true;
                 }
-                game.MouseClick(p);
-                game.MouseMove(0, 0);
-                BaseAction.waitSucFn(() =>
+            }
+            game.MouseClick(p);
+            BaseAction.waitSucFn(() =>
+            {
+                using (var img = game.getImg(new Rectangle(p, CHECKSIZE)))
                 {
-                    using (var img = game.getImg(new Rectangle(p, CHECKSIZE)))
-                    {
-                        return hide == (CHECKID == ImageTool.UUIDImg(img));
-                    }
-                }, 1000);
-                game.MouseClick(new Point(hs.CenterPoint.X + 78, hs.CenterPoint.Y + 328));
-            }
-            catch (Exception ex)
-            {
-
-            }
-            finally
-            {
-                Mouse.reventLocation();
-            }
+                    return hide == (CHECKID == ImageTool.UUIDImg(img));
+                }
+            }, 1000);
+            game.MouseClick(hs.CenterPoint.X + 78, hs.CenterPoint.Y + 328);
             return true;
         }
 

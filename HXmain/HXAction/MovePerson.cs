@@ -19,7 +19,7 @@ namespace HXmain.HXAction
         /// <summary>
         /// 强制停止移动
         /// </summary>
-        public bool PowerStop { get; set; }
+        public volatile bool PowerStop;
 
         private Point WantToPoint = Point.Empty;
 
@@ -41,11 +41,11 @@ namespace HXmain.HXAction
         /// <summary>
         /// X坐标最大偏移
         /// </summary>
-        public int MaxXFlex { get; set; } = 2;
+        public int MaxXFlex { get; set; } = 3;
         /// <summary>
         /// Y坐标最大偏移
         /// </summary>
-        public int MaxYFlex { get; set; } = 2;
+        public int MaxYFlex { get; set; } = 3;
 
         /// <summary>
         /// 是否在移动中...
@@ -84,13 +84,12 @@ namespace HXmain.HXAction
             }
         }
 
-        private bool rangeCheck = false;
 
-        public void MovePoint(int x, int y, bool rangeCheck = false)
-        {
-            this.rangeCheck = rangeCheck;
-            MovePoint(new Point(x, y), Point.Empty);
-        }
+        //public void MovePoint(int x, int y, bool rangeCheck = false)
+        //{
+        //    this.rangeCheck = rangeCheck;
+        //    MovePoint(new Point(x, y), Point.Empty);
+        //}
 
         public void MovePoint(Point pt, Point[] path, Action action)
         {
@@ -177,7 +176,7 @@ namespace HXmain.HXAction
                 {
                     return false;
                 }
-                Mouse.sleep(2000);
+                Mouse.sleep(300);
                 if (PowerStop)
                 {
                     return false;
@@ -228,7 +227,7 @@ namespace HXmain.HXAction
             {
                 while (true)
                 {
-                    Mouse.sleep(10);
+                    //Mouse.sleep(200);
                     if (PowerStop)
                     {
                         return;
@@ -238,26 +237,23 @@ namespace HXmain.HXAction
                     game.lockUtil.getLock();
                     Log.log("获取完成");
                     int time = Environment.TickCount;
-                    while (game.AutoOneKey && game.isUseSkill)
+
+                    while (game.AutoOneKey && game.hasSelectSomeOne && !game.selectInfo.isSelectSelf && game.isUseSkill)
                     {
                         if (PowerStop)
                         {
                             return;
                         }
-                        if (Environment.TickCount - time > 60000)
-                        {//超一分钟
-                            game.RefreshUseSkill();
+                        if (Environment.TickCount - time > 8000)
+                        {//超一分钟 
+                            game.selectInfo.unSelect();
+                            game.sleep(500);
+                            break;
                         }
-                        game.sleep(100);
+                        game.sleep(10);
                     }
                     try
                     {
-                        //int waitTime = 2000;
-                        //int nowTime = Environment.TickCount;
-                        //while (game.hasSelectSome() && (Environment.TickCount - nowTime) <= waitTime)
-                        //{
-                        //    game.sleep(1000);
-                        //}
                         Log.log("移动moveAction");
                         if (moveAction())
                         {
@@ -270,7 +266,7 @@ namespace HXmain.HXAction
                     finally
                     {
                         Log.log("准备释放ReleaseLock");
-                        game.lockUtil.ReleaseLock();
+                        game.lockUtil.reSetLock();
                         Log.log("释放完成ReleaseLock");
                         // Console.WriteLine("MovePoint - ReleaseLock");
                     }
@@ -278,10 +274,6 @@ namespace HXmain.HXAction
             }
         }
 
-        internal void RadomMoveAllMap(MapBase mapBase)
-        {
-
-        }
 
         public void RadomMove()
         {
@@ -323,7 +315,7 @@ namespace HXmain.HXAction
             game.MouseMove(p);
             game.sleep(200);
             Mouse.leftclick();
-            game.sleep(200);
+            game.sleep(500);
             Mouse.reventLocation();
         }
 
@@ -365,6 +357,14 @@ namespace HXmain.HXAction
             }
             Point pt = game.CurrentLocation;
 
+            Log.logForce("当前坐标[" + pt + "] -> 想要移动的坐标:" + WantToPoint);
+
+            if (Math.Abs(WantToPoint.X - pt.X) > 30 || Math.Abs(WantToPoint.Y - pt.Y) > 30)
+            {
+                Log.logForce("超界退出..");
+                return true;
+            }
+
             int x = WantToPoint.X;
             int y = WantToPoint.Y;
 
@@ -391,25 +391,19 @@ namespace HXmain.HXAction
             }
             needEnd = true;
 
+            Point nowP = game.CurrentLocation;
+
             if (pt.X == x)
             {
                 if (pt.Y > y) //上移
                 {
                     Log.log("上移");
-                    if (!canTop)
-                    {
-                        radomMove();
-                    }
-                    canTop = run(TopStep, fy + 2, needEnd);
+                    run(TopStep, fy + 2, needEnd);
                 }
                 else
                 {
                     Log.log("下移");
-                    if (!canBottom)
-                    {
-                        radomMove();
-                    }
-                    canBottom = run(BottomStep, x, false);// BottomStep(fy + 1, needEnd);
+                    run(BottomStep, x, false);// BottomStep(fy + 1, needEnd);
                 }
             }
             else if (pt.Y == y)
@@ -417,20 +411,12 @@ namespace HXmain.HXAction
                 if (pt.X > x) //左移
                 {
                     Log.log("左移");
-                    if (!canLeft)
-                    {
-                        radomMove();
-                    }
-                    LeftStep(fx, needEnd);
+                    run(LeftStep, fx, needEnd);
                 }
                 else
                 {
                     Log.log("右移");
-                    if (!canRigth)
-                    {
-                        radomMove();
-                    }
-                    canRigth = run(RightStep, fx, needEnd);
+                    run(RightStep, fx, needEnd);
                 }
             }
             else if (pt.X > x)
@@ -438,22 +424,12 @@ namespace HXmain.HXAction
                 if (pt.Y > y)
                 {
                     Log.log("左上移");
-                    if (!Left_Top)
-                    {
-                        radomMove();
-                        Left_Top = true;
-                    }
-                    Left_Top = run(Left_TopStep, fx, fy, needEnd);
+                    run(Left_TopStep, fx, fy, needEnd);
                 }
                 else
                 {
                     Log.log("左下移");
-                    if (!Left_Down)
-                    {
-                        radomMove();
-                        Left_Down = true;
-                    }
-                    Left_Down = run(Left_DownStep, fx, fy, needEnd);
+                    run(Left_DownStep, fx, fy, needEnd);
                 }
             }
             else
@@ -461,29 +437,32 @@ namespace HXmain.HXAction
                 if (pt.Y > y)
                 {
                     Log.log("右上");
-                    if (!Rigth_Top)
-                    {
-                        radomMove();
-                        Rigth_Top = true;
-                    }
-                    Rigth_Top = run(Rigth_TopStep, fx, fy, needEnd);
+                    run(Rigth_TopStep, fx, fy, needEnd);
                 }
                 else
                 {
                     Log.log("右下移");//右下强制最多2位
-                    if (!Rigth_Down)
-                    {
-                        radomMove();
-                        Rigth_Down = true;
-                    }
-                    Rigth_Down = run(Rigth_DownStep, fx, fy, needEnd);
+                    run(Rigth_DownStep, fx, fy, needEnd);
                 }
+            }
+            if (nowP == game.CurrentLocation)
+            {
+                radomMove();
+            }
+            if (isInRange() || isGoLocation() || CheckIsSuc())
+            {
+                return true;
             }
             return false;
         }
 
         private void radomMove()
         {
+            //while (game.hasSelectSomeOne && !game.selectInfo.isSelectSelf && game.isUseSkill)
+            //while (game.isUseSkill)//使用技能，不移动
+            //{
+            //    game.sleep(100);
+            //}
             List<StepDelegate> li = new List<StepDelegate>();
             li.Add(TopStep);
             li.Add(LeftStep);
@@ -498,11 +477,12 @@ namespace HXmain.HXAction
 
             while (true)
             {
-                int radom = new Random().Next(1, 4);
-                var sd = fns[li[radom]];
+                int rfn = new Random(Guid.NewGuid().GetHashCode()).Next(0, 3);
+                int rstep = new Random(Guid.NewGuid().GetHashCode()).Next(1, 4);
+                var sd = fns[li[rfn]];
                 if (sd)
                 {
-                    if (run(li[radom], radom, false))
+                    if (run(li[rfn], rstep, false))
                     {
                         canTop = true;
                         canLeft = true;
@@ -511,6 +491,7 @@ namespace HXmain.HXAction
                         break;
                     }
                 }
+                game.sleep(500);
             }
 
         }
@@ -518,7 +499,7 @@ namespace HXmain.HXAction
         private bool isInRange()
         {
             Point c = game.CurrentLocation;
-            return Math.Abs(c.X - WantToPoint.X) < 3 && Math.Abs(c.Y - WantToPoint.Y) < 3;
+            return Math.Abs(c.X - WantToPoint.X) < 2 && Math.Abs(c.Y - WantToPoint.Y) < 2;
         }
 
 
@@ -537,7 +518,7 @@ namespace HXmain.HXAction
             {
                 x = 5;
             }
-            game.pointClick(530 - x * 70, 423, needEnd);
+            game.pointClick(535 - x * 70, 423, needEnd);
         }
 
         private bool canRigth = true;
@@ -551,7 +532,7 @@ namespace HXmain.HXAction
             {
                 x = 5;
             }
-            game.pointClick(530 + x * 70, 423, needEnd);
+            game.pointClick(535 + x * 70, 423, needEnd);
         }
 
         private Point CenterPersonPoint = new Point(545, 425);
@@ -569,7 +550,7 @@ namespace HXmain.HXAction
                 x = 9;
             }
             x--;//从100开始
-            game.pointClick(545, 423 - (100 + x * 30), needEnd);
+            game.pointClick(545, 400 - (100 + x * 30), needEnd);
         }
 
         private Point getPointUpDown(int x)
@@ -590,9 +571,10 @@ namespace HXmain.HXAction
             fn.Invoke(x, y, needEnd);
             if (game.isUseSkill)
             {
+                game.sleep(100);
                 return true;
             }
-            game.sleep(500);
+            game.sleep(400);
             var after = game.CurrentLocation;
             return before.X != after.X || before.Y != after.Y;
         }
@@ -603,6 +585,8 @@ namespace HXmain.HXAction
             fn.Invoke(x, needEnd);
             if (game.isUseSkill)
             {
+                Log.logForce("use SKILL");
+                game.sleep(100);
                 return true;
             }
             game.sleep(500);

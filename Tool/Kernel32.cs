@@ -61,6 +61,74 @@
         //关闭一个内核对象。其中包括文件、文件映射、进程、线程、安全和同步对象等。
         [DllImport("kernel32.dll")]
         public static extern void CloseHandle(IntPtr hObject);
+
+
+        [DllImport("kernel32.DLL ")]
+        public static extern IntPtr CreateToolhelp32Snapshot(SnapshotFlags flags, uint processid);
+
+        [DllImport("kernel32.DLL ")]
+        public static extern int Process32First(IntPtr handle, ref ProcessEntry32 pe);
+        [DllImport("kernel32.DLL ")]
+        public static extern int Process32Next(IntPtr handle, ref ProcessEntry32 pe);
+
+
+        [DllImport("kernel32.dll")]
+        public static extern bool Module32First(IntPtr hSnapshot, ref MODULEENTRY32 lpme);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool Module32Next(IntPtr hSnapshot, ref MODULEENTRY32 lpme);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MODULEENTRY32
+        {
+            public uint dwSize;
+            public uint th32ModuleID;
+            public uint th32ProcessID;
+            public uint GlblcntUsage;
+            public uint ProccntUsage;
+            public IntPtr modBaseAddr;
+            public uint modBaseSize;
+            public IntPtr hModule;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string szModule;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szExePath;
+        }
+
+        [Flags]
+        public enum SnapshotFlags : uint
+        {
+            HeapList = 0x00000001,
+            Process = 0x00000002,
+            Thread = 0x00000004,
+            Module = 0x00000008,
+            Module32 = 0x00000010,
+            Inherit = 0x80000000,
+            All = 0x0000001F,
+            NoHeaps = 0x40000000
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct ProcessEntry32
+        {
+            public uint dwSize;
+            public uint cntUsage;
+            public uint th32ProcessID;
+            public IntPtr th32DefaultHeapID;
+            public uint th32ModuleID;
+            public uint cntThreads;
+            public uint th32ParentProcessID;
+            public int pcPriClassBase;
+            public uint dwFlags;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szExeFile;
+
+            public override string ToString()
+            {
+                return th32ModuleID + "_" + szExeFile;
+            }
+        };
     }
 }
 

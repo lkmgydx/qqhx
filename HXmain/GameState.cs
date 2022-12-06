@@ -1,6 +1,7 @@
 ﻿using HXmain.HXInfo;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,21 +14,19 @@ namespace HXmain
     /// </summary>
     public class GameState
     {
-        Timer t_Main;
+        /// <summary>
+        /// 技能1
+        /// </summary>
+        private static readonly Rectangle JiNeng = new Rectangle(205, 782, 12, 12);
+
         MainGame game;
 
         public GameState(MainGame game)
         {
             this.game = game;
-            t_Main = new System.Windows.Forms.Timer();
-            t_Main.Interval = 2000;
-            t_Main.Tick += T_Main_Tick;
         }
 
-        private void T_Main_Tick(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+
 
         /// <summary>
         /// 是否有组队信息
@@ -45,6 +44,27 @@ namespace HXmain
         public bool hasYZM()
         {
             return YZM.hasYZM(game);
+        }
+
+        private string JiNeng1Str;
+        public bool hasUseSkill()
+        {
+            var JiNeng1StrN = game.UUIDImageRec(JiNeng);
+            if (JiNeng1Str == null)
+            {
+                JiNeng1Str = JiNeng1StrN;
+                game.sleep(200);
+                return hasUseSkill();
+            }
+            if (JiNeng1Str == JiNeng1StrN)
+            {
+                return false;
+            }
+            else
+            {
+                JiNeng1Str = JiNeng1StrN;
+                return true;
+            }
         }
     }
 }

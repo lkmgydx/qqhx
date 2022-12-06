@@ -1,6 +1,10 @@
-﻿using System;
+﻿
+using iTextSharp.text.pdf;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -10,7 +14,7 @@ namespace ConsoleApplication2
 {
     class Program
     {
-        private static Bitmap bmp = (Bitmap)Image.FromFile(@"D:\qqhximg\_YZB_70.bmp");
+        //private static Bitmap bmp = (Bitmap)Image.FromFile(@"D:\qqhximg\_YZB_70.bmp");
 
         private static string hostIP = "192.168.1.26";
 
@@ -23,7 +27,7 @@ namespace ConsoleApplication2
             {
                 socket.Connect(ipEnd);
             }
-            catch (SocketException e)
+            catch
             {
                 return;
             }
@@ -136,45 +140,180 @@ namespace ConsoleApplication2
             return bmp.GetPixel(x, y).Name == "ff000000";
         }
 
+        private static byte[] ImageToBytes(Image img)
+        {
+            MemoryStream ms = new MemoryStream();
+            byte[] imagedata = null;
+            img.Save(ms, ImageFormat.Bmp);
+            imagedata = ms.GetBuffer();
+            return imagedata;
+        }
+
+        //public static Rectangle Find(Image sourceImage, Image matchImage, double threshold = 0.8)
+        //{
+        //    var refMat = Mat.FromImageData(ImageToBytes(sourceImage), ImreadModes.AnyColor);//大图 
+        //    var tplMat = Mat.FromImageData(ImageToBytes(matchImage), ImreadModes.AnyColor);//小图 
+        //    using (Mat res = new Mat(refMat.Rows - tplMat.Rows + 1, refMat.Cols - tplMat.Cols + 1, MatType.CV_32FC1))
+        //    {
+        //        Mat gref = refMat.CvtColor(ColorConversionCodes.BGR2GRAY);
+        //        Mat gtpl = tplMat.CvtColor(ColorConversionCodes.BGR2GRAY);
+        //        Cv2.MatchTemplate(gref, gtpl, res, TemplateMatchModes.CCoeffNormed);
+        //        Cv2.Threshold(res, res, 0.8, 1.0, ThresholdTypes.Tozero);
+        //        double minval, maxval;
+        //        OpenCvSharp.Point minloc, maxloc;
+        //        Cv2.MinMaxLoc(res, out minval, out maxval, out minloc, out maxloc);
+        //        if (maxval >= threshold)
+        //        {
+        //            return new Rectangle(maxloc.X, maxloc.Y, tplMat.Width, tplMat.Height);
+        //        }
+        //        return Rectangle.Empty;
+        //    }
+        //}
+
+        private static void ResetList(List<Point> p)
+        {
+            if (p == null || p.Count <= 1)
+            {
+                return;
+            }
+            int x = -p[0].X;
+            int y = -p[0].Y;
+
+            for (int i = 0; i < p.Count; i++)
+            {
+                var pt = p[i];
+                pt.Offset(x, y);
+                p[i] = pt;
+            }
+        }
+
+        private static bool isNext(Point p1, Point p2)
+        {
+            return p1.X == p2.X && p1.Y == p2.Y;
+        }
+
         static void Main(string[] args)
         {
+            string file = @"D:\users\Administrator\Desktop\OpenCV\10.jpg";
+            var dir = @"D:\users\Administrator\Desktop\OpenCV";
+            var files = Directory.GetFiles(dir);
+            Array.Sort(files, delegate (string x, string y)
+            {
+                FileInfo infox = new FileInfo(x);
+                FileInfo infoy = new FileInfo(y);
 
-            AsyncPortScan.Maint(new string[] { "192.168.1.1" });
-            Console.Read();
+                return  Convert.ToInt32( infox.Name.Replace(infox.Extension,"")) - Convert.ToInt32( (infoy.Name.Replace(infoy.Extension,"")));
+
+            });
+            var img = Image.FromFile(file);
+            var pdf = new iTextSharp.text.Document(new iTextSharp.text.Rectangle(0, 0, img.Width, img.Height));
+            img.Dispose();
+            var write = PdfWriter.GetInstance(pdf, new FileStream("d:\\a.pdf", FileMode.Create));
+            iTextSharp.text.Jpeg jpg = new iTextSharp.text.Jpeg(File.ReadAllBytes(file));
+            pdf.Open();
+
+            foreach (var item in files)
+            {
+                pdf.Add(new iTextSharp.text.Jpeg(File.ReadAllBytes(item)));
+            } 
+            pdf.Close();
+
+
+            //string file = @"D:\qqhximg\324198250.bmp";
+
+            //Bitmap bmp = Tool.ImageTool.filterBmp((Bitmap)Image.FromFile(file), Color.Black);
+            //var info = Tool.ImageTool.filterBmpInfo((Bitmap)Image.FromFile(file), Color.Black);
+            //var sucP = info.Points;
+            //int maxLen = 0;
+            //for (int i = 0; i < sucP.Length - 1; i++)
+            //{
+            //    var one = sucP[i];
+            //    var next = sucP[i + 1];
+            //    int t = 0;
+            //    while (isNext(one, next))
+            //    {
+            //        i++;
+            //        t++;
+            //        if (t > maxLen)
+            //        {
+            //            maxLen = t;
+            //        }
+            //        one = next;
+            //        next = sucP[i + 1];
+            //    }
+            //}
+            //bmp.Save(@"d:\dddd.bmp");
+
+            //string file = @"D:\qqhximg\font_钱善_花5官银.bmp";
+            //Bitmap bmp = Image.FromFile(file) as Bitmap;
+
+            //string file2 = @"D:\qqhximg\font_钱善_花5官银2.bmp";
+            //Bitmap bmp2 = Image.FromFile(file2) as Bitmap;
+            //try
+            //{
+            //    var f = Tool.ImageTool.filterBmpInfo(bmp, Color.Yellow);
+            //    var f2 = Tool.ImageTool.filterBmpInfo(bmp2, Color.Yellow);
+
+            //    var pt1 = f.OffSetPoints;
+            //    var pt2 = f2.OffSetPoints;
+
+
+            //    List<Point> pr = new List<Point>();
+            //    for (int i = 0; i < pt1.Length; i++)
+            //    {
+            //        Point pt = pt1[i];
+            //        if (!pt2.Contains(pt))
+            //        {
+            //            pr.Add(pt);
+            //        }
+            //    }
+
+            //    for (int i = 0; i < pt2.Length; i++)
+            //    {
+            //        Point pt = pt2[i];
+            //        if (!pt1.Contains(pt))
+            //        {
+            //            pr.Add(pt);
+            //        }
+            //    }
+            //    "".ToString();
+            //    //var m = Tool.ImageTool.filterBmp(bmp, Color.Yellow);
+            //    // f.Save("d:\\xx.jpg");
+            //}
+            //catch (Exception ex)
+            //{
+            //    ex.ToString();
+            //}
+
+            //Dictionary<Color, List<System.Drawing.Point>> di = new Dictionary<Color, List<System.Drawing.Point>>();
+
+            //for (int x = 0; x < bmp.Width; x++)
+            //    for (int j = 0; j < bmp.Height; j++)
+            //    {
+            //        Color c = bmp.GetPixel(x, j);
+            //        System.Drawing.Point p = new System.Drawing.Point(x, j);
+            //        if (!di.ContainsKey(c))
+            //        {
+
+            //            di.Add(c, new List<System.Drawing.Point>() { p });
+            //        }
+            //        else
+            //        {
+            //            di[c].Add(p);
+            //        }
+            //    }
+
+            // Find(Image.FromFile("c:\\v1.png"), Image.FromFile("c:\\v2.png"));
+            //AsyncPortScan.Maint(new string[] { "192.168.1.1" });
+            //Console.Read();
             return;
             //切图思路
             //1.清除多余点
 
             // HugUP(1);
             // var bmp = Tool.ImageTool.CopyPriScreen(new Rectangle(100, 100, 100, 100));
-            var bmp = (Bitmap)Bitmap.FromFile("d://vv.png");
-            var bt = new Bitmap(bmp.Width, bmp.Height);
 
-            #region 打断
-            for (int y = 0; y < bmp.Height; y++)
-                for (int x = 0; x < bmp.Width; x++)
-                {
-                    if (!isBlack(x, y, bmp))
-                    {
-                        continue;
-                    }
-                    int count = getCountN(x, y, bmp);
-                    bool candel = canDel(x, y, bmp);
 
-                    if (candel != (count > 2))
-                    {
-                        "".ToString();
-                    }
-                    if (candel)
-                    {
-                        bmp.SetPixel(x, y, Color.White);
-                        continue;
-                    }
-                    bt.SetPixel(x, y, Color.Black);
-                }
-
-            bt.Save("h:\\vv.bmp");
-            #endregion 
 
             //for (int y = 0; y < bmp.Height; y++)
             //    for (int x = 0; x < bmp.Width; x++)
@@ -186,10 +325,10 @@ namespace ConsoleApplication2
             //    }
 
 
-            bmp = ConsoleApplication2.Properties.Resources.vv;
-            var rst = Tool.ImageTool.findImageFromScreen(bmp);
-            Tool.ImageTool.COMP_IMG_TIMES.ToString();
-            Console.Write(rst);
+            //bmp = ConsoleApplication2.Properties.Resources.vv;
+            //var rst = Tool.ImageTool.findImageFromScreen(bmp);
+            //Tool.ImageTool.COMP_IMG_TIMES.ToString();
+            //Console.Write(rst);
             // AsyncPortScan.MainDo(new string[] { "192.168.1.141","1","128" });
 
             //var fv = Environment.TickCount;

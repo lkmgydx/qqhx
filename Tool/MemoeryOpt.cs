@@ -80,7 +80,7 @@ namespace Tool
                 //Array.Copy(buffer, bt, max);
                 return Encoding.GetEncoding("GB2312").GetString(brstBuff);
             }
-            catch (Exception ex)
+            catch 
             {
                 return "";
             }

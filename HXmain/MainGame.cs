@@ -16,32 +16,67 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tool;
 using WSTools.WSLog;
+using WSTools.WSThread;
 
 namespace HXmain
 {
     public class MainGame : IDisposable
     {
-        private static WSTools.WSHook.KeyboardHook key = new WSTools.WSHook.KeyboardHook();
+
+        public static Image rrbb = Resources.font_华夏帮帮;
+
 
         /// <summary>
-        /// 技能1
+        /// 当前角色名称
         /// </summary>
-        private static readonly Rectangle JiNeng = new Rectangle(205, 782, 12, 12);
+        private static readonly Rectangle NameRec = new Rectangle(120, 86, 100, 14);
+        /// <summary>
+        /// 选中对象整个区域
+        /// </summary>
+        private static readonly Rectangle SelectSlefRec = new Rectangle(305, 85, 95, 12);
+        /// <summary>
+        /// 选中对象血量
+        /// </summary>
+        private static readonly Rectangle SelectBlood = new Rectangle(300, 300, 100, 4);
+        /// <summary>
+        /// 是否有选择目标区域
+        /// </summary>
+        private static Rectangle _SELECT_RECTANGLE = new Rectangle(300, 87, 6, 5);
 
-        private static String JiNeng1Str = null;
+        /// <summary>
+        /// 运行锁定
+        /// </summary>
+        public LockTopRun LockTopRun { get; private set; } = new LockTopRun();
+
+        private string JiNeng1Str = null;
 
         private bool _isUseSkill = false;
+
+        #region 事件
+
+        /// <summary>
+        /// 地图改变
+        /// </summary>
+        /// <param name="mapBefor"></param>
+        /// <param name="mapAfter"></param>
+        public delegate void onMapChangeEventHandler(MapBase mapBefor, MapBase mapAfter);
+        /// <summary>
+        /// 地图切换事件
+        /// </summary>
+        public event onMapChangeEventHandler onMapChangeEvent;
+
+        #endregion
+
         /// <summary>
         /// 是否在使用技能
         /// </summary>
-        public bool isUseSkill
-        {
-            get { return _isUseSkill; }
-            private set
-            {
-                _isUseSkill = value;
-            }
-        }
+        public bool isUseSkill { get; private set; }
+
+        /// <summary>
+        /// 自动打坐
+        /// </summary>
+        public bool AutoSetDown { get; set; }
+
 
         public delegate void onSelectChange(bool isSelect);
         public event onSelectChange onSelectChangeEvent;
@@ -54,7 +89,7 @@ namespace HXmain
         /// </summary>
         public bool hasSelectSomeOne
         {
-            get; set;
+            get; private set;
         }
 
         private string _SelectName = "";
@@ -67,7 +102,7 @@ namespace HXmain
 
             private set
             {
-                if (value == _SelectName)
+                if (_SelectName == value)
                 {
                     return;
                 }
@@ -76,31 +111,31 @@ namespace HXmain
             }
         }
 
-        bool isRealKey = false;
+
+        private string _Name;
         /// <summary>
-        /// 刷新技能
+        /// 角色名称
         /// </summary>
-        public void RefreshUseSkill()
+        public string Name
         {
-            if (isRealKey)
+            get
             {
-                return;
+                if (_Name == null)
+                {
+                    _Name = getOrcRange(NameRec);
+                }
+                return _Name;
             }
-            bool onkey = AutoOneKey;
-            sleep(3000);
-            string afff = UUIDImageRec(JiNeng);
-            if (afff == JiNeng1Str)
+            private set
             {
-                isRealKey = true;
+                _Name = value;
             }
-            JiNeng1Str = afff;
-            AutoOneKey = onkey;
         }
 
-        HasSomeToHit hasSomeToHit;
 
-        SelectInfo selectInfo;
-        CloseGameWins closeWin;
+        private HomeGetSome homeGetSome;
+        public SelectInfo selectInfo { get; private set; }
+        public CloseGameWins CloseWin { get; private set; }
         public WuPingLanInfo WuPingLanInfo { get; private set; }
         public RunGamePath runGamePath { get; private set; }
         public AUTOTiLianWuPing aUTOTiLianWuPing { get; private set; }
@@ -129,31 +164,51 @@ namespace HXmain
         /// </summary>
         public event Event.Events.VoidEventHand onPowerStop;
 
-        /// <summary>
-        /// 是否有怪可以攻击
-        /// </summary>
-        public bool HasSomeToHit
-        {
-            get
-            {
-                return hasSomeToHit.HasHit();
-            }
-        }
 
+
+        /// <summary>
+        /// ESC停止任务
+        /// </summary>
+        public bool ESCSTOP { get; set; }
         /// <summary>
         /// 强制停止正在运行的任务 
         /// </summary>
         public void PowerStop()
         {
-            aUTOTiLianWuPing.StopAutoLian();//停止自动提练
-            canGo = false;
-            onPowerStop?.Invoke();
+            ESCSTOP = true;
+            try
+            {
+                aUTOTiLianWuPing.StopAutoLian();//停止自动提练
+                canGo = false;
+            }
+            catch (Exception ex)
+            {
+                Log.logErrorForce("停止提练失败", ex);
+            }
+            try
+            {
+                Log.logForce("强制停止事件...");
+                onPowerStop?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Log.logErrorForce("停止异常", ex);
+            }
+            WSTools.WSThread.WsThread.Run(() =>
+            {
+                Thread.Sleep(5000);
+                ESCSTOP = true;
+            });
         }
 
         /// <summary>
         /// 文件目录
         /// </summary>
         public static string FILE_ROOT = "d:\\qqhximg\\";
+        /// <summary>
+        /// 技能使用
+        /// </summary>
+        public event WSTools.WsEvent.WsBoolEvent onUseSkillEvent;
         /// <summary>
         /// 验证码检查
         /// </summary>
@@ -165,14 +220,19 @@ namespace HXmain
         /// </summary>
         public event SignleEventHandler onYZMEvent;
 
-        public event EventHandler onlog;
-
         public delegate void LocationChangeEvent(Point before, Point now);
         /// <summary>
         /// 位置改变事件
         /// </summary>
         public event LocationChangeEvent onLocationChange;
 
+        /// <summary>
+        /// 安全区变化时触发
+        /// </summary>
+        public event WSTools.WsEvent.WsBoolEvent onSafeRegionChange;
+        /// <summary>
+        /// 位置获取定时器
+        /// </summary>
         private System.Timers.Timer locationFreshTimer = new System.Timers.Timer();
 
 
@@ -186,8 +246,6 @@ namespace HXmain
         /// 是否自动组队
         /// </summary>
         public bool AutoZuDui { get; set; } = false;
-
-
 
         AuToGet autoget;
         /// <summary>
@@ -212,57 +270,56 @@ namespace HXmain
             Mouse.DrawMousePosition();
         }
 
+        public Graphics getGriphs()
+        {
+            return Graphics.FromHwnd(MainHandler);
+        }
+
 
         public bool AutoOneKey
         {
-            get { return t_autoOneKey.Enabled; }
+            get { return needSendOneKey; }
             set
             {
-                t_autoOneKey.Enabled = value;
+                needSendOneKey = value;
+                t_AutoKey.Enabled = value;
+                if (value)
+                {
+                    if (string.IsNullOrEmpty(Name))
+                    {
+                        Name = getOrcRange(NameRec);
+                    }
+                    ESCSTOP = false;
+                    sw.Start();
+
+                }
+                else
+                {
+                }
             }
         }
 
-        private bool needSendOneKey = true;
+        private volatile bool needSendOneKey = false;
 
-        private void T_autoOneKey_Tick(object sender, EventArgs e)
-        {
-            if (!needSendOneKey)
-            {
-                return;
-            }
-            if (JiNeng1Str == null)
-            {
-                JiNeng1Str = "_";
-                JiNeng1Str = UUIDImageRec(JiNeng);
-            }
-            else
-            {
-                isUseSkill = JiNeng1Str != UUIDImageRec(JiNeng);
-            }
-            try
-            {
-                //User32.SendMessage(MainHandler, 0x0100, 192, 1);
+        /// <summary>
+        /// FB模式
+        /// </summary>
+        /// 
+        public bool isFbMode { get; set; }
 
-                SendKey(Keys.Oemtilde);
-                KeyBoard.sleep(100);
-                SendKey(Keys.D1);
-                KeyBoard.sleep(100);
-                SendKey(Keys.D2);
+        public bool isFbMode4 { get; set; }
 
-                //SendKey(Keys.Space);
-            }
-            catch (Exception ex)
-            {
-                Log.logError("send key Error!", ex);
-            }
+        public bool isFbMode1 { get; set; }
 
-        }
+        public bool isFbMode2 { get; set; }
 
-        System.Windows.Forms.Timer t_autoOneKey;
+        public bool isFbMode3 { get; set; }
 
+
+        private string _XL;
 
         System.Windows.Forms.Timer t_Main;
-
+        System.Timers.Timer t_AutoKey;
 
         /// <summary>
         /// 主进程HANDLER
@@ -329,32 +386,49 @@ namespace HXmain
 
         public void TiLianSome()
         {
-            Task.Run(() =>
+            WsThread.Run(() =>
             {
-                TiLian.TiLianSome(this);
+                LockTopRun.Run(() =>
+                {
+                    TiLian.TiLianSome(this);
+                });
             });
         }
 
-        /// <summary>
-        /// 地图名称
-        /// </summary>
-        public string MapNameMemery { get { return getString(0x0D331568); } }
+        public void TopRun(Action t, bool isSyn = false)
+        {
+            if (isSyn)
+            {
+                LockTopRun.Run(t);
+            }
+            else
+            {
+                WsThread.Run(() =>
+                {
+                    LockTopRun.Run(t);
+                });
+            }
+        }
+
+        public void SubRun(Action t, bool isSyn = false)
+        {
+            if (isSyn)
+            {
+                LockTopRun.Run(t);
+            }
+            else
+            {
+                WsThread.Run(() =>
+                {
+                    LockTopRun.Run(t);
+                });
+            }
+        }
 
         /// <summary>
         /// 地图名称
         /// </summary>
         public string MapName { get { return CurrentMap.Name; } }
-
-        /// <summary>
-        /// 地图base64字符串
-        /// </summary>
-        public string MapNameBase64
-        {
-            get
-            {
-                return ImageTool.getImgBase64(sc.getImg(MapBase.MapRectangle));
-            }
-        }
 
         /// <summary>
         /// 当前地图
@@ -384,7 +458,7 @@ namespace HXmain
             t_Main.Enabled = false;
             if (MainProcess.HasExited)
             {
-                Environment.Exit(0);
+                return;
             }
             try
             {
@@ -402,12 +476,27 @@ namespace HXmain
 
         private long lastClick = 0;
 
+
         private void realMainDo()
         {
             using (Bitmap Bitmap = sc.getImg(MapBase.MapRectangle))
             {
-                this.CurrentMap = MapBase.getCurrentMap(Bitmap);
+                if (Bitmap.Width != MapBase.MapRectangle.Width)
+                {
+                    Log.logWarnForce("???异常 " + Bitmap.Width + "____" + MapBase.MapRectangle.Width);
+                    //获取图片异常
+                    return;
+                }
+                var now_map = MapBase.getCurrentMap(Bitmap);
+
+                if (CurrentMap != now_map)
+                {
+                    var before_map = CurrentMap;
+                    CurrentMap = now_map;
+                    onMapChangeEvent?.Invoke(before_map, now_map);
+                }
             }
+
 
             if (RightClick && Environment.TickCount - lastClick > 1000 * 7)
             {
@@ -419,23 +508,48 @@ namespace HXmain
                 Mouse.reventLocation();
                 lastClick = Environment.TickCount;
             }
-
             hasSelectSomeOne = selectInfo.hasSelect();
+            if (hasSelectSomeOne)
+            {
+                string xl = UUIDImageRec(SelectBlood);
+                if (_XL != xl)
+                {
+                    Log.log("当前血量:" + xl);
+                }
+                _XL = xl;
+            }
+
+            bool us = GameState.hasUseSkill();
+            if (us != isUseSkill)
+            {
+                isUseSkill = us;
+                onUseSkillEvent.Invoke(us);
+            }
+
             SelectName = selectInfo.SelectName;
+
             if (AutoZuDui && GameState.hasZuDuiinfo())
             {
                 SendKey(Keys.F);
+                sleep(100);
+                SendKey(Keys.Space);
+                sleep(100);
                 SendKey(Keys.Space);
             }
             if (YZMcheck && GameState.hasYZM())
             {
-                EmailTool.SendToQQ("有验证码需要处理!", "验证信息");
+                EmailTool.SendToQQ("[" + MapName + "]有验证码需要处理!", "验证信息");
                 onYZMEvent?.Invoke();
             }
-            using (Bitmap bmp = sc.HImage)
+            if (AutoSetDown && !PeronSetDown.isSetdown(this))
+            {
+                PeronSetDown.SetDown(this);
+            }
+
+            if (dieCheck)
             {
                 hasDie = false;
-                if (dieCheck)
+                using (Bitmap bmp = sc.HImage)
                 {
                     HSearchPoint hs = HXDieAutoLive.hasDie(bmp);
                     if (hs.Success)
@@ -470,32 +584,14 @@ namespace HXmain
             Mouse.reventLocation();
             sleep(100);
         }
-        public Bitmap getImg(Rectangle rec, bool move = true)
+        public Bitmap getImg(Rectangle rec)
         {
-            if (move)
+            try
             {
-                //Mouse.cacheLocation();
-                //MouseMove(1022, 785);
-                try
-                {
-                    return sc.getImg(rec);
-                }
-                catch { }
-                finally
-                {
-                    // Mouse.reventLocation();
-                }
-                return new Bitmap(1, 1);
+                return sc.getImg(rec);
             }
-            else
-            {
-                try
-                {
-                    return sc.getImg(rec);
-                }
-                catch { }
-                return new Bitmap(1, 1);
-            }
+            catch { }
+            return new Bitmap(1, 1);
         }
 
         /// <summary>
@@ -505,16 +601,21 @@ namespace HXmain
         /// <returns></returns>
         public string UUIDImageRec(Rectangle rec)
         {
-            using (Bitmap bmp = getImg(rec, false))
+            using (Bitmap bmp = getImg(rec))
             {
                 return ImageTool.UUIDImg(bmp);
             }
         }
 
+        public string UUIDImageRec(Bitmap img)
+        {
+            return ImageTool.UUIDImg(img);
+        }
+
         public Bitmap getImg()
         {
             //Mouse.cacheLocation();
-            Mouse.HideMouse();
+            //Mouse.HideMouse();
             //MouseMove(1022 + 45, 785 + 25);
             //Mouse.sleep(3000);
             try
@@ -527,7 +628,7 @@ namespace HXmain
             finally
             {
                 //Mouse.reventLocation();
-                Mouse.ShowMouse();
+                //Mouse.ShowMouse();
             }
             return new Bitmap(1, 1);
         }
@@ -569,7 +670,7 @@ namespace HXmain
 
         public void AutoRun(bool isRevernt = false)
         {
-            Task.Run(() =>
+            WsThread.Run(() =>
             {
                 AutoRunGame.Run(this, isRevernt);
             });
@@ -579,7 +680,21 @@ namespace HXmain
 
         public void closeAllGameWin()
         {
-            closeWin.closeAll();
+            CloseWin.closeAll();
+        }
+
+        private static readonly Rectangle rec_Tip = new Rectangle(380, 580, 280, 90);
+        public string TipInfo()
+        {
+            return getOrcRange(rec_Tip, Color.Yellow);
+        }
+
+        /// <summary>
+        /// 等待拾取
+        /// </summary>
+        public void WaitGet()
+        {
+            homeGetSome.WaitGet();
         }
 
         public MainGame(Process process)
@@ -591,26 +706,27 @@ namespace HXmain
             MainProcess = process;
             MainHandler = process.MainWindowHandle;
             sc = new ScreenCapture(MainHandler);
+            sc.onError += Sc_onError;
             StandCheck = new StandCheck(this);
             StandCheck.PostionNotMoveEventHander += StandCheck_PostionNotMoveEventHander;
 
-            hasSomeToHit = new HasSomeToHit(this);
+
             runGamePath = new RunGamePath(this);
             WuPingLanInfo = new WuPingLanInfo(this);
             界面显示 = new 界面显示(this);
             selectInfo = new SelectInfo(this);
             aUTOTiLianWuPing = new AUTOTiLianWuPing(this);
-            closeWin = new CloseGameWins(this);
+            CloseWin = new CloseGameWins(this);
+            homeGetSome = new HomeGetSome(this);
 
             var os = Environment.OSVersion;
             if (os.Version.ToString() == "6.2.9200.0")
             {
                 Point_Address = 0x00192F54;
                 Point_Address = 0x00192F4C;
+                CurrentLocation = getCurrentLocation();
             }
-            CurrentLocation = getCurrentLocation();
-
-            if (CurrentLocation.X == 0)
+            else
             {
                 Point_Address = 0x00122F6C;
                 Point_Address = 0x00122F64;
@@ -623,17 +739,15 @@ namespace HXmain
                 }
             }
 
-
-            t_autoOneKey = new System.Windows.Forms.Timer();
-            t_autoOneKey.Interval = 1000;
-            t_autoOneKey.Tick += T_autoOneKey_Tick;
-
-
             t_Main = new System.Windows.Forms.Timer();
             t_Main.Tick += T_Main_Tick;
             t_Main.Start();//主流程检测，每2秒执行一次检测任务
 
-            locationFreshTimer.Interval = 200;
+            t_AutoKey = new System.Timers.Timer();
+            t_AutoKey.Elapsed += T_AutoKey_Tick;
+            t_AutoKey.Interval = 400;
+
+            locationFreshTimer.Interval = 400;
             locationFreshTimer.Elapsed += locationFreshTimer_Elapsed;
             locationFreshTimer.Start();
 
@@ -647,13 +761,80 @@ namespace HXmain
 
             CurrentMap = MapBase.STATIC_BASE_MAP;
 
-            //string rst=  MemoeryOpt.ReadMemoryValueStr(0x9F223A8, MainProcess.Id, 555);
-            // MemoeryOpt.ReadMemoryValueStr(0x09F223A8, MainProcess.Id);
+            sw_location.Start();
         }
 
-        private void MainProcess_Exited(object sender, EventArgs e)
+        /// <summary>
+        /// 攻击列表，对象的名称
+        /// </summary>
+        public string ActName { get; set; }
+
+        Stopwatch sw = new Stopwatch();
+
+        private void T_AutoKey_Tick(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            if (!needSendOneKey)
+            {
+                Log.log("skip...");
+                return;
+            }
+            SendKey(Keys.Space);
+            sleep(300);
+
+            //如果选择自己，退出
+            if (selectInfo.isSelectSelf)
+            {
+                selectInfo.unSelect();
+                SendKey(Keys.Oemtilde);
+                sleep(500);
+                sw.Restart();
+                return;
+            }
+
+            bool hasSelect = hasSelectSome();
+            var secName = SelectName;
+            var actName = ActName;
+
+            if (!hasSelect || sw.ElapsedMilliseconds > 5000)
+            {
+                SendKey(Keys.Oemtilde);
+                sleep(500);
+                sw.Restart();
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(secName))//没有攻击对象，退出
+            {
+                return;
+            }
+            bool isNull = string.IsNullOrWhiteSpace(actName);//攻击过滤
+            if (!isNull)
+            {
+                if (secName.IndexOf(actName) == -1)
+                {
+                    SendKey(Keys.Oemtilde);
+                    sleep(500);
+                    sw.Restart();
+                    return;
+                }
+            }
+            sendSub();
+        }
+
+        private void sendSub()
+        {
+            SendKey(Keys.D1);
+            KeyBoard.sleep(200);
+            SendKey(Keys.D2);
+        }
+
+
+        private void Sc_onError()
+        {
+            Log.logErrorForce("!!!pid change....");
+            Process p = Process.GetProcessById(MainProcess.Id);
+            MainHandler = p.MainWindowHandle;
+            sc.Handle = MainHandler;
+            Log.logErrorForce("!!!pid changeed....");
         }
 
         private void StandCheck_PostionNotMoveEventHander(Point postion)
@@ -674,42 +855,97 @@ namespace HXmain
             Log.logError("RadomMove【ReleaseLock】");
         }
 
+        /// <summary>
+        /// 是否为安全区
+        /// </summary>
+        public bool IsSafeRegion { get; private set; }
+
+        private object lockLoationChangeObj = new object();
+
+
+        Stopwatch sw_location = new Stopwatch();
         private void locationFreshTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            try
+            lock (lockLoationChangeObj)
             {
-                Point before = CurrentLocation;
-                Point pt = getCurrentLocation();
-                if (pt.X <= 0 || pt.Y <= 0 || pt.X > 600 || pt.Y > 600)
+                try
                 {
-                    return;
-                }
-                if (onLocationChange != null)
-                {
-                    if (pt.X != CurrentLocation.X || pt.Y != CurrentLocation.Y)
+                    Point beforePoint = CurrentLocation;
+                    Point afterPoint = getCurrentLocation();
+                    if (afterPoint.X <= 0 || afterPoint.Y <= 0 || afterPoint.X > 600 || afterPoint.Y > 600)
                     {
-                        // Console.WriteLine(before + "->" + pt);
-                        CurrentLocation = pt;
-                        Task.Run(() =>
+                        return;
+                    }
+                    if (afterPoint.Y == 10)
+                    {
+                        return;
+                    }
+                    CurrentLocation = afterPoint;
+                    var isLocationChanged = !afterPoint.Equals(beforePoint);
+
+                    var isSafeBefor = IsSafeRegion;
+                    var isSafeAfter = IsSafeRegion = CurrentMap.isSafeRegion(this);
+
+                    var isSafeChange = (isSafeBefor != isSafeAfter);
+
+
+                    if (onLocationChange != null && (sw_location.ElapsedMilliseconds>5000|| isLocationChanged))
+                    {
+                        sw_location.Restart();
+                        //Log.logForce("[" + IsSafeRegion + "] - location before  " + beforePoint + " -> " + afterPoint);
+                        try
                         {
-                            onLocationChange(before, CurrentLocation);
-                        });
+                            onLocationChange(beforePoint, afterPoint);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.logErrorForce("onLocationChange异常..", ex);
+                        }
+                    }
+
+                    if (isSafeChange && onSafeRegionChange != null)
+                    {
+                        //Log.logForce("invoke safe..." + IsSafeRegion);
+                        onSafeRegionChange(IsSafeRegion);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.logError("位置处理异常!", ex);
+                catch (Exception ex)
+                {
+                    Log.logErrorForce("位置处理异常!", ex);
+                }
             }
         }
 
         public string getCurrentSelectName()
         {
             return selectInfo.SelectName;
-            // return MemoeryOpt.ReadMemoryValue(Point_Address + 0x235B6508, 32, MainProcess.Id);
         }
 
-        System.Threading.Thread run = null;
+        public string getOrcRange(Rectangle rec)
+        {
+            using (var img = getImg(rec))
+            {
+                return ImageCacheTool.getOrcText(img);
+            }
+        }
+
+        /// <summary>
+        /// 抽取指定颜色信息识别
+        /// </summary>
+        /// <param name="rec"></param>
+        /// <param name="filterColor"></param>
+        /// <returns></returns>
+        public string getOrcRange(Rectangle rec, Color filterColor)
+        {
+            using (var img = getImg(rec))
+            {
+                using (var t = ImageTool.filterBmp(img, filterColor))
+                {
+                    return ImageCacheTool.getOrcText(t);
+                }
+            }
+        }
+         
 
         /// <summary>
         /// 循环执行指定路径，默认为true
@@ -724,36 +960,34 @@ namespace HXmain
         private bool canGo = false;
 
 
-        /// <summary>
-        /// 是否有选择目标区域
-        /// </summary>
-        private static Rectangle _SELECT_RECTANGLE = new Rectangle(300, 87, 6, 5);
 
-        public bool hasSelectSome()
+        private static readonly Point CancelSelectPoint = new Point(1053, 41);
+
+        private object lockSelect = new object();
+        public void CancelSelect()
         {
-            using (Bitmap bmp = sc.getImg(_SELECT_RECTANGLE))
+            lock (lockSelect)
             {
-                {
-                    for (int i = 0; i < bmp.Width; i++)
-                    {
-                        for (int j = 0; j < bmp.Height; j++)
-                        {
-                            Color c = bmp.GetPixel(i, j);
-                            if (c.R != 0 || c.G != 0 || c.B != 0)
-                            {
-                                Log.log("-----------未选择攻击目标");
-                                return false;
-                            }
-                        }
-                    }
-                }
-                Log.log("++++++++++已选择攻击目标");
-                return true;
+                Mouse.cacheLocation();
+                MouseMove(CancelSelectPoint);
+                Mouse.rightclick();
+                Mouse.reventLocation();
             }
         }
 
+        public bool SlectNextCanHit()
+        {
+            lock (lockSelect)
+            {
+                SendKey(Keys.Oemtilde);
+                return hasSelectSome();
+            }
+        }
 
-        public event EventHandler onEndRun;
+        public bool hasSelectSome()
+        {
+            return selectInfo.hasSelect();
+        }
 
 
         public void runPath(Point[] pt, Action fn = null)
@@ -761,25 +995,20 @@ namespace HXmain
             runGamePath.Run(pt, fn);
         }
 
-        //private void runPoint(Point pt, Point next)
-        //{
-        //    if (!canGo)
-        //    {
-        //        return;
-        //    }
-        //    _runPoint = pt;
-        //    CurrentMovePoint = pt;
-        //    try
-        //    {
-        //        movePersion.MovePoint(pt, next);
-        //    }
-        //    catch (Exception)
-        //    {
+        /// <summary>
+        /// 获取资源缓存路径
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Point[] getResoucePath(string name)
+        {
+            return PathPointUtil.getResourcePoint(name);
+        }
 
-        //    }
-        //    Log.log("===========SUC===============" + pt.X + ":" + pt.Y);
-        //}
-
+        public void runPath(string arName, bool xh = false, bool revert = false, Action fn = null)
+        {
+            runGamePath.Run(PathPointUtil.getResourcePoint(arName + ".txt"), fn);
+        }
 
         Point CurrentMovePoint = Point.Empty;
 
@@ -821,9 +1050,14 @@ namespace HXmain
             pointClick(p.X, p.Y);
         }
 
+
         public void pointClick(int x, int y, bool needEnd = true)
         {
             MouseMove(x, y);
+            //Mouse.cacheLocation();
+            //User32.SendMessage(MainHandler, 0x201, 1, (y << 16) | x);
+            //User32.SendMessage(MainHandler, 0x202, 1, (y << 16) | x);
+            //Mouse.reventLocation();
             Mouse.leftclick();
         }
 
@@ -842,6 +1076,11 @@ namespace HXmain
             MouseMove(p.X, p.Y);
         }
 
+        public void GotoBoss(Action action)
+        {
+            CurrentMap.GotoBoss(this, action);
+        }
+
         public void MouseMove(int x, int y)
         {
             int fx = sc.HLeft;
@@ -849,7 +1088,7 @@ namespace HXmain
             Mouse.move(fx + x, fy + y);
         }
         /// <summary>
-        /// 移动后点击
+        /// 移动后点击,位置会自动复位
         /// </summary>
         /// <param name="p"></param>
         public void MouseClick(Point p)
@@ -857,50 +1096,90 @@ namespace HXmain
             MouseClick(p.X, p.Y);
         }
 
+        /// <summary>
+        /// 移动后点击,位置会自动复位
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public void MouseClick(int x, int y)
         {
             Mouse.cacheLocation();
             MouseMove(x, y);
-            Mouse.leftclick();
-            Mouse.sleep(200);
+            MouseClick();
             Mouse.reventLocation();
+        }
+
+        public void MouseDbClick(Point p)
+        {
+            MouseDbClick(p.X, p.Y);
+        }
+
+        public void MouseDbClick(int x, int y)
+        {
+            Point p = Mouse.Location();
+            MouseClick_Real(p.X, p.Y);
+            MouseClick_Real(p.X, p.Y);
         }
 
         public void MouseClick()
         {
+            Point p = Mouse.Location();
+            MouseClick_Real(p.X, p.Y);
+        }
+
+        private void MouseClick_Real(int x, int y)
+        {
             Mouse.leftclick();
+            sleep(100);
+            //User32.SendMessage(MainHandler, 0x201, 1, (y << 16) | x);
+            //sleep(10);
+            //User32.SendMessage(MainHandler, 0x202, 1, (y << 16) | x);
+        }
+
+        private void MouseRightClick_Real(int x, int y)
+        {
+            //User32.SendMessage(MainHandler, 0x204, 1, (y << 16) | x);
+            //User32.SendMessage(MainHandler, 0x205, 1, (y << 16) | x);
         }
 
         public void MouseRigthClick()
         {
             Mouse.rightclick();
+            sleep(100);
+            //MouseRightClick_Real(afterPoint.X, afterPoint.Y);
         }
 
         public void MouseRigthClick(Point p)
         {
+            Mouse.cacheLocation();
             MouseMove(p);
-            Mouse.sleep(100);
-            Mouse.rightclick();
+            MouseRigthClick();
+            Mouse.reventLocation();
         }
 
         public void MouseRigthDBClick(int x, int y)
         {
             Mouse.cacheLocation();
             MouseMove(x, y);
-            Mouse.rightDbclick();
-            Mouse.sleep(200);
+            //Mouse.rightDbclick();
+            MouseRigthClick();
+            MouseRigthClick();
+            Thread.Sleep(200);
+            MouseRigthClick();
+            MouseRigthClick();
+            //Mouse.rightDbclick();
+            Thread.Sleep(200);
             Mouse.reventLocation();
-        }
-
-        public void MouseRigthDBClick(Point p)
-        {
-            MouseRigthDBClick(p.X, p.Y);
         }
 
         public void MouseRigthClick(int x, int y)
         {
+            Mouse.cacheLocation();
             MouseMove(x, y);
             Mouse.rightclick();
+            Thread.Sleep(200);
+            Mouse.reventLocation();
+            //Mouse.rightclick();
             // System.Windows.Forms.SendKeys.Send()
         }
 
@@ -909,9 +1188,20 @@ namespace HXmain
             //System.Windows.Forms.SendKeys.Send(key.ToString());
             //System.Windows.Forms.SendKeys.Send
             //User32.SetForegroundWindow(MainHandler);
-            User32.SendMessage(MainHandler, 0x0100, (int)key, 1);
-            Mouse.sleep(100);
-            User32.SendMessage(MainHandler, 0x0000, (int)key, 1);
+
+            //User32.SetForegroundWindow(MainHandler);
+            //KeyBoard.down_up(key);
+
+            User32.PostMessage(MainHandler, 0x0100, (int)key, 0x20001);
+            Thread.Sleep(1);
+            User32.PostMessage(MainHandler, 0x0101, (int)key, 0x20001);
+
+            //SEND 卡
+            //User32.SendMessage(MainHandler, 0x0100, (int)key, 0x20001);
+            ////User32.PostMessage(MainHandler, 0x0102, (int)key, 0x20001);
+            //Thread.Sleep(1);
+            //User32.SendMessage(MainHandler, 0x0101, (int)key, 0xC0020001);
+            Thread.Sleep(1);
         }
 
         //public void SendKeyDown(Keys key)
@@ -927,19 +1217,7 @@ namespace HXmain
 
         public void Dispose()
         {
-            if (run != null)
-            {
-                try
-                {
-                    run.Abort();
-                    if (onEndRun != null)
-                        onEndRun.Invoke(null, null);
-                }
-                catch (Exception ex)
-                {
-                    Log.logError("close error", ex);
-                }
-            }
+            PowerStop();
         }
 
         /// <summary>
@@ -947,48 +1225,90 @@ namespace HXmain
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        public HSearchPoint clickImg(Bitmap bmp)
+        public HSearchPoint clickImg(Bitmap bmp, int x = 0, int y = 0, bool waitSuc = false, int waitTime = 3000, int f = 0)
         {
-            return clickImg(bmp, Point.Empty);
+            return clickImg(bmp, x, y, waitSuc, waitTime);
         }
 
         /// <summary>
-        /// 传入的bmp将自动释放
+        /// 点击等待图片
         /// </summary>
         /// <param name="bmp"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="waitTime">3秒</param>
         /// <returns></returns>
-        public HSearchPoint clickImg(Bitmap bmp, Point fl)
+        public HSearchPoint clickWaitImg(Bitmap bmp, int x = 0, int y = 0, int waitTime = 3000)
         {
-            return clickImg(bmp, fl.X, fl.Y, true);
-        }
-
-
-        /// <summary>
-        /// 传入的bmp将自动释放
-        /// </summary>
-        /// <param name="bmp"></param>
-        /// <returns></returns>
-        public HSearchPoint clickImg(Bitmap bmp, Point fl, bool isCenter = true)
-        {
-            return clickImg(bmp, fl.X, fl.Y, isCenter);
-        }
-
-        /// <summary>
-        /// 传入的bmp将自动释放
-        /// </summary>
-        /// <param name="bmp"></param>
-        /// <returns></returns>
-        public HSearchPoint clickImg(Bitmap bmp, int x = 0, int y = 0, bool isCenter = true)
-        {
+            long start = Environment.TickCount;
+            HSearchPoint hs = null;
             using (bmp)
             {
-                HSearchPoint hs = findImg(bmp);
-                Point p = isCenter ? hs.CenterPoint : hs.Point;
-                if (hs.Success)
+                do
                 {
-                    MouseClick(p.X + x, p.Y + y);
+                    hs = findImg(bmp);
+                    if (hs.Success)
+                    {
+                        Point p = hs.Point;
+                        p.Offset(x, y);
+                        MouseClick(p);
+                        break;
+                    }
+                } while (Environment.TickCount - waitTime > 0);
+            }
+            return hs;
+        }
+
+        /// <summary>
+        /// 传入的bmp将自动释放
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public HSearchPoint clickImg(Bitmap bmp, Point fl, bool waitSuc = false, int waitTime = 3000)
+        {
+            return clickImg(bmp, fl.X, fl.Y, waitSuc, waitTime);
+        }
+
+        /// <summary>
+        /// 传入的bmp将自动释放
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public HSearchPoint clickImg(Bitmap bmp, int x, int y, bool waitSuc, int waitTime)
+        {
+            if (waitSuc)
+            {
+                long start = Environment.TickCount;
+                HSearchPoint hs = null;
+                using (bmp)
+                {
+                    do
+                    {
+                        hs = findImg(bmp);
+                        if (hs.Success)
+                        {
+                            Point p = hs.Point;
+                            p.Offset(x, y);
+                            MouseClick(p);
+                            break;
+                        }
+                    } while (Environment.TickCount - waitTime > 0);
                 }
                 return hs;
+            }
+            else
+            {
+                using (bmp)
+                {
+                    HSearchPoint hs = findImg(bmp);
+                    if (hs.Success)
+                    {
+                        Point p = hs.Point;
+                        p.Offset(x, y);
+                        MouseClick(p);
+                    }
+                    return hs;
+                }
             }
         }
 
@@ -1011,6 +1331,19 @@ namespace HXmain
             {
                 return ImageTool.findEqImgAll(bmp, bit);
             }
+        }
+
+        public List<HSearchPoint> findImgAll(List<Bitmap> bmp)
+        {
+            List<HSearchPoint> rst = new List<HSearchPoint>();
+            using (Bitmap bit = getImg())
+            {
+                for (int i = 0; i < bmp.Count; i++)
+                {
+                    rst.AddRange(ImageTool.findEqImgAll(bmp[i], bit));
+                }
+            }
+            return rst;
         }
 
         public Point ToClientPoint(Point start)
@@ -1047,6 +1380,15 @@ namespace HXmain
             return new Point(x, y);
         }
 
+        /// <summary>
+        /// 是否在BOSS范围内
+        /// </summary>
+        /// <returns></returns>
+        public bool isInBoosRange()
+        {
+            return CurrentMap.isInBossRange(this);
+        }
+
         private static void log(string msg)
         {
             Console.WriteLine(DateTime.Now.ToString("hh:mm:ss") + " - " + msg);
@@ -1055,6 +1397,11 @@ namespace HXmain
         public void AUTOTiLianWuPing()
         {
             aUTOTiLianWuPing.StartAutoTiLian();
+        }
+
+        public void slep(int v)
+        {
+            Mouse.sleep(v);
         }
     }
 }

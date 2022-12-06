@@ -5,6 +5,7 @@ using HXmain.HXAction;
 using HXmain.HXInfo;
 using HXmain.HXInfo.CacheData;
 using HXmain.HXInfo.Map;
+using HXmain.HXInfo.NPC.升龙殿;
 using qqhx.Properties;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,14 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Security;
 using System.Windows.Forms;
 using Tool;
 using WSTools.WSLog;
 using WSTools.WSThread;
+using WSTools.WSWinAPI;
+using static HFrameWork.SystemDll.Kernel32;
 using u32 = WSTools.WSWinAPI.WinUser32;
 
 namespace qqhx
@@ -41,6 +45,8 @@ namespace qqhx
         {
             key.KeyPressEvent += Key_KeyPressEvent;
             key.Start();
+
+            mm = new MainManager();
             //bool createNew;
             //using (System.Threading.Mutex m = new System.Threading.Mutex(true, Application.ProductName, out createNew))
             //{ 
@@ -77,6 +83,7 @@ namespace qqhx
 
         private void Key_KeyPressEvent(object sender, KeyPressEventArgs e)
         {
+            Log.logForce("key_Press_" + e.KeyChar);
             if (e.KeyChar == 45)
             {
                 Environment.Exit(0);
@@ -113,7 +120,7 @@ namespace qqhx
             //   // setV(0);
             //    setV(1);
             //});
-            WuPingData.getWuping(null);//初始化物品信息
+            //WuPingData.getWuping(null);//初始化物品信息
             startPoint.X = Math.Max(startPoint.X, 0);
             startPoint.X = Math.Min(startPoint.X, Screen.PrimaryScreen.Bounds.Width);
 
@@ -167,7 +174,7 @@ namespace qqhx
 
 
 
-        MainManager mm = new MainManager();
+        MainManager mm;
         private void Form1_onFindGameEvent()
         {
             // int key = Kernel32.OpenProcess(Kernel32.OpenProcess_VM_READ | Kernel32.OpenProcess_VM_WRITE, false, p.Id);
@@ -213,6 +220,18 @@ namespace qqhx
             {
                 mm.寄售Search(text_寄售SearchName.Text);
             }
+        }
+
+
+        public static void MouseLeftClick(Point p, IntPtr handle)
+        {
+
+            //build coordinates
+            int coordinates = p.X | (p.Y << 16);
+            //send left button down
+            PostMessage(handle, 0x201, 1, coordinates);
+            //send left button up
+            PostMessage(handle, 0x202, 1, coordinates);
         }
 
         public void MoNiMouseClick()
@@ -271,8 +290,14 @@ namespace qqhx
         [DllImport("user32.dll", EntryPoint = "SendMessage", CharSet = CharSet.Auto, SetLastError = false)]
         static extern IntPtr SendMessageN(IntPtr hWnd, uint Msg, int wParam, int lParam);
 
+        [DllImport("user32.dll", EntryPoint = "SendMessage", CharSet = CharSet.Auto, SetLastError = false)]
+        static extern IntPtr SendMessageNN(IntPtr hWnd, uint Msg, int wParam, uint lParam);
+
         [DllImport("user32.dll", EntryPoint = "PostMessage", CharSet = CharSet.Auto, SetLastError = false)]
         static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
+
+        [DllImport("user32.dll", EntryPoint = "PostMessage", CharSet = CharSet.Auto, SetLastError = false)]
+        static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, int wParam, uint lParam);
 
         private void txtH_TextChanged(object sender, EventArgs e)
         {
@@ -433,15 +458,8 @@ namespace qqhx
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            this.autoSetDown.Enabled = checkBox1.Checked;
+            mm.MainGame.AutoSetDown = checkBox1.Checked;
         }
-
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            mm.SetDown();
-        }
-
-
 
         private Rectangle getRec()
         {
@@ -590,12 +608,36 @@ namespace qqhx
 
         private void timer3_Tick(object sender, EventArgs e)
         {
-            this.timer3.Enabled = false;
-            if (mm != null)
+            var cc = User32.CURSORINFO.getNew();
+            User32.GetCursorInfo(out cc);
+
+            if (cc.flags == 0)
             {
-                mm.follow();
+                return;
             }
-            timer3.Enabled = checkBox3.Enabled;
+
+            try
+            {
+                Cursor vCursor = new Cursor(cc.hCursor);
+
+
+                var g = tabPage4.CreateGraphics();
+                vCursor.Draw(g, new Rectangle(Point.Empty, vCursor.Size));
+
+                vCursor.Dispose();
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+            }
+
+            // GetCursorInfo
+            //this.timer3.Enabled = false;
+            //if (mm != null)
+            //{
+            //    mm.follow();
+            //}
+            //timer3.Enabled = checkBox3.Enabled;
         }
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
@@ -782,7 +824,7 @@ namespace qqhx
         private void checkBox6_CheckedChanged(object sender, EventArgs e)
         {
             //this.timer_one_jineng.Enabled = checkBox6.Checked;
-            this.mm.MainGame.AutoOneKey = checkBox6.Checked;
+            this.mm.MainGame.AutoOneKey = check_AutoOneKey.Checked;
         }
 
 
@@ -813,24 +855,8 @@ namespace qqhx
 
         private void button28_Click(object sender, EventArgs e)
         {
-            if (mm.MainGame != null)
-            {
-                mm.MainGame.runPath(getResourcePoint("Points.txt"));
-            }
-
-            //Point [] pt = new Point[] {new Point( 290 147) }
-            // 290 147
-            // 290 144
-            // 288 138
-            // 284 136
-            // 278 132
-            // 275 136
-            // 273 139
-            // 271 145
-            // 271 150
-            // 273 158
-            //278 156
-            // 287 153
+            HXmain.HXInfo.NPC.升龙殿.NPC_官职晋升 nj = new NPC_官职晋升();
+            nj.领取俸禄N(mm.MainGame);
         }
 
         private void button29_Click(object sender, EventArgs e)
@@ -962,11 +988,7 @@ namespace qqhx
 
         private void button19_Click_1(object sender, EventArgs e)
         {
-            if (mm.MainGame != null)
-            {
-                mm.MainGame.isXUNHUAN = true;
-                mm.MainGame.runPath(getResourcePoint("Points.txt"));
-            }
+
         }
 
         private void button20_Click_1(object sender, EventArgs e)
@@ -1030,27 +1052,7 @@ namespace qqhx
             Application.Exit();
         }
 
-        private void button24_Click_1(object sender, EventArgs e)
-        {
-            if (mm.MainGame != null)
-            {
-                mm.MainGame.isXUNHUAN = false;
-                long tickcount = Environment.TickCount;
-                mm.MainGame.runPath(getResourcePoint("运镖.txt"), new Action(() =>
-                {
-                    Tool.EmailTool.SendToQQ("运镖完成!耗时:" + (Environment.TickCount - tickcount) + "毫秒", "YB");
-                }));
-            }
-        }
 
-        private void button25_Click_1(object sender, EventArgs e)
-        {
-            if (mm.MainGame != null)
-            {
-                mm.MainGame.isXUNHUAN = true;
-                mm.MainGame.runPath(getResourcePoint("昆仑FB.txt"));
-            }
-        }
 
         private void button18_Click(object sender, EventArgs e)
         {
@@ -1061,10 +1063,6 @@ namespace qqhx
             }
         }
 
-        private void button26_Click_1(object sender, EventArgs e)
-        {
-
-        }
 
         private void button26_Click_2(object sender, EventArgs e)
         {
@@ -1099,78 +1097,40 @@ namespace qqhx
 
         private void timer_click_Tick(object sender, EventArgs e)
         {
-            this.mm.SendKey(Keys.D3);
-        }
-
-        private void button27_Click_1(object sender, EventArgs e)
-        {
-            if (mm.MainGame != null)
+            if (mm.MainGame.hasSelectSomeOne && !mm.MainGame.selectInfo.isSelectSelf)
             {
-                mm.MainGame.isXUNHUAN = true;
-                mm.MainGame.runPath(getResourcePoint("阪泉小范围.txt"));
+                mm.MainGame.SendKey(Keys.D3);
             }
         }
 
-        private void button28_Click_1(object sender, EventArgs e)
-        {
-            if (mm.MainGame != null)
-            {
-                MapBase map = mm.MainGame.CurrentMap;
-                this.lab_map_name.Text = map.Name;
-                this.richTextBox1.Text += "\r\n当前地图: [" + map.MapKey + "]";
-            }
-        }
-
-        private void button34_Click(object sender, EventArgs e)
-        {
-            if (mm.MainGame != null)
-            {
-                this.lab_name.Text = mm.MainGame.getString(0x07DB0CDA);
-            }
-        }
-
-
-        private void button35_Click(object sender, EventArgs e)
-        {
-            string rst = HYLOcr.getRst(this.pictureBox1.Image);
-            if (string.IsNullOrEmpty(rst))
-            {
-                return;
-            }
-            WSTools.WSWinFn.ShowInfo("获取结果为:\r\n" + rst);
-        }
-
-        private void button36_Click(object sender, EventArgs e)
-        {
-            string rst = BaiDuOcr.getImgText(this.pictureBox1.Image);
-            if (string.IsNullOrEmpty(rst))
-            {
-                return;
-            }
-            WSTools.WSWinFn.ShowInfo("获取结果为:\r\n" + rst);
-        }
 
         private void checkBox11_CheckedChanged(object sender, EventArgs e)
         {
             mm.AutoZudui = ((CheckBox)sender).Checked;
         }
 
-        private void Form1_LocationChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void button37_Click(object sender, EventArgs e)
         {
             CopyScreenForm cf = new CopyScreenForm();
             cf.onSucSelectEventHandler2 += Cf_onSucSelectEventHandler2;
+            if (check_NPC.Checked)
+            {
+                cf.EnableFilterColor = true;
+                //cf.FilterColor = Color.FromArgb(255, 138, 0);
+                cf.FilterColor = Color.Black;
+            }
             cf.Show();
         }
 
-        private void Cf_onSucSelectEventHandler2(Point start, Point end)
+        private void Cf_onSucSelectEventHandler2(Point start, Point end, Rectangle rec, Bitmap bmp)
         {
             if (mm.MainGame == null)
             {
+                var te = bmp.Clone() as Bitmap;
+                this.pictureBox1.Image = te;
+                this.pictureBox1.Width = te.Width;
+                this.pictureBox1.Height = te.Height;
+
                 return;
             }
             Point pleft = mm.MainGame.ToClientPoint(start);
@@ -1215,28 +1175,32 @@ namespace qqhx
             {
                 return;
             }
-            //if (RightClick && Environment.TickCount - lastClick > 1000 * 10)
-            //{
-            //    Mouse.cacheLocation();
-            //    //SendKey(Keys.R);
-            //   // MouseMove(400, 300);
-            //    Mouse.rightclick();
-            //    Mouse.reventLocation();
-            //    lastClick = Environment.TickCount;
-            //}
+
+
             ptrGame = getActivePtr();
             if (ptrGame.isGame)
             {
                 this.Text = "qqHX - " + ptrGame.Process.Id;
                 this.mm.setMainProcess(ptrGame.Process);
+
+                //绑定位置改变
                 this.mm.MainGame.onLocationChange -= MainGame_onLocationChange2;
                 this.mm.MainGame.onLocationChange += MainGame_onLocationChange2;
+
+                //绑定地图改变事件
+                mm.MainGame.onMapChangeEvent -= MainGame_onMapChangeEvent;
+                mm.MainGame.onMapChangeEvent += MainGame_onMapChangeEvent;
+
+                MainGame_onMapChangeEvent(null, mm.MainGame.CurrentMap);
                 MainGame_onLocationChange2(new Point(0, 0), mm.MainGame.CurrentLocation);
 
+                //人物选择变更
                 this.mm.MainGame.onSelectChangeEvent -= MainGame_onSelectChangeEvent;
                 this.mm.MainGame.onSelectChangeEvent += MainGame_onSelectChangeEvent;
 
-                this.lab_map_name.Text = mm.MainGame.MapName;
+                mm.MainGame.onUseSkillEvent -= MainGame_onUseSkillEvent;
+                mm.MainGame.onUseSkillEvent += MainGame_onUseSkillEvent;
+
                 for (var i = 0; i < this.checkedListBox1.Items.Count; i++)
                 {
                     if (checkedListBox1.Items[i].ToString() == ptrGame.Process.Id.ToString())
@@ -1253,6 +1217,23 @@ namespace qqhx
             }
         }
 
+        private void MainGame_onUseSkillEvent(bool suc)
+        {
+            syn.Run(() =>
+            {
+                toolStrip_skill.Text = "[" + suc + "]";
+            });
+        }
+
+        private void MainGame_onMapChangeEvent(MapBase mapBefor, MapBase mapAfter)
+        {
+            syn.Run(() =>
+            {
+                toolStrip_mapName.Text = mapAfter.Name;
+            });
+
+        }
+
         private void MainGame_onSelectChangeEvent(bool isSelect)
         {
             string rst = "-";
@@ -1262,9 +1243,7 @@ namespace qqhx
             }
             syn.Run(() =>
             {
-                Console.WriteLine(rst);
                 toolStrip_selectName.Text = rst;
-
             });
         }
 
@@ -1273,14 +1252,20 @@ namespace qqhx
             syn.Run(() =>
             {
                 toolStrip_postion.Text = now.ToString();
-                toolStrip_mapName.Text = mm.MainGame.CurrentMap.Name;
+
+                if (mm.MainGame.IsSafeRegion)
+                {
+                    toolStrip_region.Text = "安全区";
+                    toolStrip_region.ForeColor = Color.Green;
+                }
+                else
+                {
+                    toolStrip_region.Text = "危险区";
+                    toolStrip_region.ForeColor = Color.Red;
+                }
             });
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void button2_Click_2(object sender, EventArgs e)
         {
@@ -1308,11 +1293,6 @@ namespace qqhx
         private const int LWA_ALPHA = 0;
 
 
-
-        private void btn_dy2_Click(object sender, EventArgs e)
-        {
-
-        }
 
 
         private void button6_Click_1(object sender, EventArgs e)
@@ -1370,7 +1350,7 @@ namespace qqhx
 
         private void button22_Click(object sender, EventArgs e)
         {
-            AutoInXHZ.run(mm.MainGame);
+            AutoInXHZ.run(mm.MainGame, check_AutoStart.Checked);
         }
 
         private void button29_Click_1(object sender, EventArgs e)
@@ -1437,8 +1417,15 @@ namespace qqhx
 
         private void MainGame_onLocationChange(Point before, Point now)
         {
-            runPoints.Add(now);
-            Log.log("rec---->" + now);
+            if (Math.Abs(before.X - now.X) <= 4 && Math.Abs(before.Y - now.Y) <= 4)
+            {
+                runPoints.Add(now);
+                Log.log("rec---->" + now);
+            }
+            else
+            {
+                Log.logWarnForce("录制路径异常，步长过长[" + before + "] -> [" + now + "]");
+            }
         }
 
         private void button40_Click(object sender, EventArgs e)
@@ -1539,94 +1526,24 @@ namespace qqhx
 
         System.Timers.Timer t = new System.Timers.Timer();
         SelectInfo si;
+
+
+        uint MAKELONG(ushort x, ushort y)
+        {
+            return ((((uint)x) << 16) | y);
+        }
+
         private void btn_dy1_Click(object sender, EventArgs e)
         {
-            mm.MainGame.Active();
-            ToDaySlD.升龙殿投票NPC任务_打劫(mm.MainGame);
-            //if (mm.MainGame.CurrentMap.Name == "天圣原")
-            //{
-            //   // 天圣原Map.NPC_驿站车夫.MoveTo(mm.MainGame, "祭台");
-            //}
-            //DrawMapPoints dp = new DrawMapPoints(mm.MainGame);
-            //dp.Start();
-            //Bitmap bmp = (Bitmap)Image.FromFile(@"D:\qqhximg\ss24923781.bmp");
-
-            //Bitmap br = ImageTool.cutSigleBmp(bmp, Color.FromArgb(255, 255, 138, 0));
-
-            //br.Save("e:\\rr.bmp");
-
-            //ImgStrCls ic = new ImgStrCls();
-            //Bitmap bmp = ic.bmpCF;
-            //bmp = (Bitmap)Image.FromFile(@"D:\qqhximg\yz18229953.bmp");
-            //Dictionary<Color, int> dir = new Dictionary<Color, int>();
-            //Color c = Color.FromArgb(255, 255, 138, 0);
-            //Bitmap bt = new Bitmap(bmp.Width, bmp.Height);
-            //List<Point> li = new List<Point>();
-
-            //for (int i = 0; i < bmp.Width; i++)
-            //{
-            //    for (int j = 0; j < bmp.Height; j++)
-            //    {
-            //        Color cc = bmp.GetPixel(i, j);
-            //        if(c==cc)
-            //       // if (cc.A == 255 && cc.R == 255 && cc.G == 138 && cc.B == 0)
-            //        {
-            //            // bt.SetPixel(i, j, cc);
-            //            li.Add(new Point(i, j));
-            //        }
-            //        if (dir.ContainsKey(cc))
-            //        {
-            //            dir[cc]++;
-            //        }
-            //        else
-            //        {
-            //            dir.Add(cc, 1);
-            //        }
-            //    }
-            //}
-            //bt.Save("E:\\bb.bmp");
-            //"".ToString();
+            NPC_宅院驿丞 nn = new NPC_宅院驿丞();
+            nn.newDJ(mm.MainGame);
+            //mm.MainGame.MouseRigthClick(405, 372);
+            return;
         }
 
         private void btn_dy(object sender, EventArgs e)
         {
-            //AsyncPortScan.Maint(new string[] { "192.168.1.1" });
-            Console.WriteLine("OK");
-            //  mm.MainGame.movePersion.MovePoint(151, 134);
-            //HXmain.HXInfo.Map.Map升龙殿.Map.NPC_宅院驿丞.MoveTo(mm.MainGame);
-            //HXmain.HXInfo.NPC.升龙殿.NPC_宅院驿丞.排行榜任务(mm.MainGame);
-            // 领取俸禄
-
-            //HXmain.HXAction.ToDaySlD.升龙殿官职晋升NPC任务1(mm.MainGame);
-            //Mouse.HideMouse();
-            //AUTOTiLianWuPing aw = new AUTOTiLianWuPing(mm.MainGame);
-            //aw.StartAutoTiLian();
-            // AUTOTiLianWuPing aw = new AUTOTiLianWuPing(mm.MainGame);
-            //aw.StartAutoTiLian();
-            //var hs = mm.MainGame.findImg(Resources.ww52889578);
-            // this.Text = hs.Success + hs.Point.ToString();
-            //var bmp = mm.MainGame.getImg(new Rectangle(756, 298, 42, 9));
-            //var suc = "";
-            //var hs = mm.MainGame.findImg(bmp);
-            //suc = hs.Success + "_" + hs.Point.ToString();
-
-            //bmp.Save("d://cc.bmp", ImageFormat.Png);
-
-            //hs = mm.MainGame.findImg((Bitmap)Image.FromFile("d://cc.bmp"));
-
-            //hs = mm.MainGame.findImg(Resources.ww52889578);
-            //suc = hs.Success + "_" + hs.Point.ToString();
-            //this.Text = suc;
-            //Mouse.move(500, 500);
-            //var i = new WuPingLanInfo(mm.MainGame).getEmpty();
-
-            //MessageBox.Show(i.Count+"");
-            //var b = ImageTool.ZoomBmp(ImageTool.CopyPriScreen(new Rectangle(100, 100, 200, 200)), 20);
-
-
-            //b.Save("f://vv.bmp");
-            //mm.MainGame.Active();
-            //mm.MainGame.SendKey(System.Windows.Forms.Keys.D0);
+            // ImageTool.filterBmp(mm.MainGame.getImg(), Color.FromArgb(0, 255, 255)).Save(@"d:\vvv.bmp");
         }
 
         private void button3_Click_1(object sender, EventArgs e)
@@ -1639,10 +1556,14 @@ namespace qqhx
         private bool isPNG = false;//是否存为PNG格式
         private Bitmap png_temp = null;
 
-        private void Cf_onSucSelectEventHandler21(Point start, Point end)
+        private void Cf_onSucSelectEventHandler21(Point start, Point end, Rectangle rec, Bitmap bmp)
         {
             if (mm.MainGame == null)
             {
+                var te = bmp.Clone() as Bitmap;
+                this.pictureBox1.Image = te;
+                this.pictureBox1.Width = te.Width;
+                this.pictureBox1.Height = te.Height;
                 return;
             }
             Point pleft = mm.MainGame.ToClientPoint(start);
@@ -1672,15 +1593,11 @@ namespace qqhx
             });
         }
 
-        private void check_autoTilian_CheckedChanged(object sender, EventArgs e)
-        {
-            mm.AutoTilian = check_autoTilian.Enabled;
-        }
-
         private void button40_Click_1(object sender, EventArgs e)
         {
             mm.MainGame.Active();
-            mm.MainGame.AutoRun();
+            mm.MainGame.AutoOneKey = check_AutoOneKey.Checked;
+            mm.MainGame.AutoRun(checkBox10.Checked);
         }
 
         private void button41_Click_1(object sender, EventArgs e)
@@ -1692,34 +1609,21 @@ namespace qqhx
             {
                 try
                 {
-                    for (int j = 0; j < 3; j++)
+                    for (int i = 0; i < 3; i++)
                     {
-                        for (int i = 0; i < mm.Count; i++)
-                        {
-                            Log.logForce("三海经日常开始1:");
-                            try
-                            {
-                                mm[i].Active();
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.logErrorForce("激活异常!", ex);
-                            }
-                            Log.logForce("激活完开始任务:");
-                            三海经.三第经日常(mm[i]);
-                            if (j == 2)
-                            {
-                                签到.开始签到(mm[i]);
-                            }
-                        }
+                        Log.logForce("激活完开始任务:");
+                        三海经.三第经日常(mm.MainGame);
+
                         Log.logForce("三海经日休息中:");
                         WsThread.Run(() =>
                         {
                             mm.MainGame.Active();
                             mm.MainGame.AutoRun();
                         });
+
                         Thread.Sleep(5 * 60 * 1000 + 10);//休息5分10秒
                     }
+                    签到.开始签到(mm.MainGame);
                     Log.logForce("三海经日休结束!");
                 }
                 finally
@@ -1813,17 +1717,17 @@ namespace qqhx
             //WSTools.WSWinAPI.WinUser32.ShowWindow(ff, WSTools.WSWinAPI.nCMDShowModel.SW_HIDE);
             return;
 
-            IntPtr pt = FindWindow("DSOFramerOCXWnd", null);
-            if (pt == IntPtr.Zero)
-            {
-                pt = FindWindow("DSOFramerDocWnd", null);
-            }
-            if (pt != null)
-            {
-                WSTools.WSWinAPI.WinUser32.SetForegroundWindow(pt);
-            }
+            //IntPtr pt = FindWindow("DSOFramerOCXWnd", null);
+            //if (pt == IntPtr.Zero)
+            //{
+            //    pt = FindWindow("DSOFramerDocWnd", null);
+            //}
+            //if (pt != null)
+            //{
+            //    WSTools.WSWinAPI.WinUser32.SetForegroundWindow(pt);
+            //}
 
-            return;
+            //return;
             //IntPtr winPtr = GetWindow(desktopPtr, GetWindowCmd.GW_CHILD);            //3、循环取得桌面下的所有子窗口
 
 
@@ -1897,6 +1801,397 @@ namespace qqhx
         {
             mm.MainGame.MouseMove(getRec().Location);
         }
+
+        private Bitmap copy(Bitmap bmp)
+        {
+            Bitmap bt = new Bitmap(bmp.Width, bmp.Height);
+            for (int i = 0; i < bmp.Height; i++)
+            {
+                for (int k = 0; k < bmp.Width; k++)
+                {
+                    bt.SetPixel(k, i, bmp.GetPixel(k, i));
+                }
+            }
+            return bt;
+        }
+
+        private bool isEq(Bitmap a, Bitmap b)
+        {
+            for (int i = 0; i < a.Height; i++)
+            {
+                for (int k = 0; k < a.Width; k++)
+                {
+                    if (a.GetPixel(k, i).ToArgb() != b.GetPixel(k, i).ToArgb())
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+
+        }
+
+        private void button47_Click(object sender, EventArgs e)
+        {
+            Bitmap bpri = null;
+            Bitmap bfirst = null;
+            int i = 0;
+            while (true)
+            {
+                using (var bbb = mm.MainGame.getImg(getRec()))
+                {
+                    try
+                    {
+                        if (bpri == null)
+                        {
+                            bpri = copy(bbb);
+                            bfirst = copy(bbb);
+                        }
+                        else
+                        {
+                            if (isEq(bbb, bpri))
+                            {
+                                continue;
+                            }
+                            if (isEq(bbb, bfirst))
+                            {
+                                return;
+                            }
+                        }
+
+                        bbb.Save("vv/w" + (++i) + ".bmp", ImageFormat.Bmp);
+                        bpri = copy(bbb);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.logError(ex);
+                    }
+
+                }
+            }
+
+        }
+
+        private void button42_Click_1(object sender, EventArgs e)
+        {
+            mm.MainGame.isFbMode = false;
+            mm.MainGame.isFbMode1 = true;
+            mm.MainGame.isFbMode2 = false;
+            mm.MainGame.isFbMode3 = false;
+            mm.MainGame.isFbMode4 = false;
+            mm.MainGame.AutoRun();
+        }
+
+        private void button43_Click_1(object sender, EventArgs e)
+        {
+            mm.MainGame.isFbMode = false;
+            mm.MainGame.isFbMode1 = false;
+            mm.MainGame.isFbMode2 = true;
+            mm.MainGame.isFbMode3 = false;
+            mm.MainGame.isFbMode4 = false;
+            mm.MainGame.AutoRun();
+        }
+
+        private void button44_Click_1(object sender, EventArgs e)
+        {
+            mm.MainGame.isFbMode = false;
+            mm.MainGame.isFbMode1 = false;
+            mm.MainGame.isFbMode2 = false;
+            mm.MainGame.isFbMode3 = true;
+            mm.MainGame.isFbMode4 = false;
+            mm.MainGame.AutoRun();
+        }
+
+        private void button48_Click(object sender, EventArgs e)
+        {
+            mm.MainGame.isFbMode = false;
+            mm.MainGame.isFbMode1 = false;
+            mm.MainGame.isFbMode2 = false;
+            mm.MainGame.isFbMode3 = false;
+            mm.MainGame.isFbMode4 = true;
+            mm.MainGame.AutoRun();
+        }
+
+        private void button49_Click(object sender, EventArgs e)
+        {
+            mm.MainGame.isFbMode = true;
+            mm.MainGame.AutoRun();
+        }
+
+        private void button50_Click(object sender, EventArgs e)
+        {
+            //new Rectangle(305, 85, 95, 12)
+            string key = $"new Rectangle({txtX.Text}, {txtY.Text}, {txtW.Text}, {txtH.Text})";
+            System.Windows.Forms.Clipboard.SetText(key);
+        }
+
+        private void button51_Click(object sender, EventArgs e)
+        {
+            ToDaySlD.升龙殿投票NPC任务_打劫(mm.MainGame);
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            for (int i = 0; i < mm.Count; i++)
+            {
+                mm[i].ActName = textBox2.Text;
+            }
+        }
+
+        private void button52_Click(object sender, EventArgs e)
+        {
+            if (!textBox2.Text.Contains(mm.MainGame.SelectName))
+            {
+                textBox2.Text += "," + mm.MainGame.SelectName;
+            }
+        }
+
+        private void button53_Click(object sender, EventArgs e)
+        {
+            mm.MainGame.runPath("昆仑墟_1");
+        }
+
+        private void button54_Click(object sender, EventArgs e)
+        {
+            mm.MainGame.runPath("昆仑墟_2");
+        }
+
+        private void button55_Click(object sender, EventArgs e)
+        {
+            mm.MainGame.runPath("昆仑墟_3");
+        }
+
+        private void button56_Click(object sender, EventArgs e)
+        {
+            mm.MainGame.runPath("昆仑墟3_1");
+
+        }
+
+        private void button57_Click(object sender, EventArgs e)
+        {
+            if (mm.MainGame.CurrentMap == MapBase.Maps.北郡5)
+            {
+                MapBase.Maps.北郡5.中级装备商.AskSome(mm.MainGame);
+            }
+        }
+
+        private void button58_Click(object sender, EventArgs e)
+        {
+            if (mm.MainGame.CurrentMap == MapBase.Maps.北郡5)
+            {
+                MapBase.Maps.北郡5.杂货店掌柜.AskSome(mm.MainGame);
+            }
+        }
+
+        private void 重新加载ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mm.Dispose();
+            mm = new MainManager();
+            findGame();
+        }
+
+        private void 移除ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mm.removeGameProcess((MainGame)checkedListBox1.SelectedItem);
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            WSTools.WSThread.WsThread.Run(() =>
+            {
+                ToDaySlD.升龙殿钱善NPC任务1_自动捐满(mm.MainGame);
+            });
+        }
+
+        private void button18_Click_1(object sender, EventArgs e)
+        {
+            new NPC_钱善().我要出力N(mm.MainGame);
+            //WSTools.WSThread.WsThread.Run(() =>
+            //{
+            //    //ToDaySlD.升龙殿钱善NPC任务3(mm.MainGame);
+
+            //});
+        }
+
+        private void btn_sxy_reset_Click(object sender, EventArgs e)
+        {
+            foreach (var c in tab_SXY.Controls)
+            {
+                if (c is LevelInfocs)
+                {
+                    LevelInfocs l = c as LevelInfocs;
+                    l.DisCheckAll();
+                }
+            }
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            new NPC_宅院驿丞().newPHB(mm.MainGame);
+        }
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+            new NPC_宅院驿丞().newDJ(mm.MainGame);
+        }
+
+        private void button25_Click(object sender, EventArgs e)
+        {
+            Text = mm.MainGame.TipInfo();
+        }
+
+        private void tabPage3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button27_Click(object sender, EventArgs e)
+        {
+            Text = ImageCacheTool.getOrcText((Bitmap)pictureBox1.Image);
+        }
+
+        private void button30_Click_1(object sender, EventArgs e)
+        {
+            HXmain.HXInfo.NPC.升龙殿.NPC_官职晋升 nj = new NPC_官职晋升();
+            nj.官职任务(mm.MainGame);
+        }
+
+        private void btn_ncick_Click(object sender, EventArgs e)
+        {
+            btn_ncick.Enabled = false;
+            if (btn_ncick.Text == "点击中")
+            {
+                btn_ncick.Text = "点击";
+                timer_nclick.Enabled = false;
+            }
+            else
+            {
+                btn_ncick.Text = "点击中";
+                timer_nclick.Interval = (int)num_time.Value;
+                timer_nclick.Enabled = true;
+            }
+            btn_ncick.Enabled = true;
+        }
+
+        private void timer_nclick_Tick(object sender, EventArgs e)
+        {
+            mm.MainGame.MouseClick((int)num_x.Value, (int)num_y.Value);
+        }
+
+        private void button34_Click(object sender, EventArgs e)
+        {
+            mm.MainGame.onSafeRegionChange -= MainGame_onSafeRegionChange;
+            mm.MainGame.onSafeRegionChange += MainGame_onSafeRegionChange;
+            Log.logForce("click onSafeRegionChange");
+            if (!mm.MainGame.isInBoosRange())
+            {
+                WsThread.Run(() => { MainGame_onSafeRegionChange(true); });
+            }
+        }
+
+
+        bool runpath = false;
+        private void MainGame_onSafeRegionChange(bool suc)
+        {
+            Log.logForce("safe.." + suc);
+            if (runpath)
+            {
+                return;
+            }
+
+            if (suc)
+            {
+                Log.logForce("GotoBoss");
+                runpath = true;
+                //mm.MainGame.AutoOneKey = true;
+                bool isXunh = mm.MainGame.isXUNHUAN;
+                mm.MainGame.isXUNHUAN = false;
+                mm.MainGame.GotoBoss(() =>
+                {
+                    runpath = false;
+                    mm.MainGame.AutoOneKey = true;
+                    mm.MainGame.isXUNHUAN = isXunh;
+                    Log.logForce("run end");
+                });
+            }
+        }
+
+        private void button59_Click(object sender, EventArgs e)
+        {
+            string path = mm.MainGame.savePic_MapStr();
+            ProcessStartInfo psi = new ProcessStartInfo("Explorer.exe");
+            psi.Arguments = "/e,/select," + path;
+            Process.Start(psi);
+        }
+
+        private void timer_tilian_Tick(object sender, EventArgs e)
+        {
+            WsThread.Run(() =>
+            {
+                new WuPingLanInfo(mm.MainGame).TilianAllForce();
+                mm.MainGame.drawMouse();
+            });
+        }
+
+        private void check_tilian_CheckedChanged(object sender, EventArgs e)
+        {
+            timer_tilian.Interval = (int)num_tilian.Value;
+            timer_tilian.Enabled = check_tilian.Checked;
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            if (mm.MainGame == null)
+            {
+                return;
+            }
+            mm.MainGame.MainProcess.Kill();
+            checkedListBox1.Items.Remove(checkedListBox1.CheckedItems[0]);
+        }
+
+        private void btn_color_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button8_Click_1(object sender, EventArgs e)
+        {
+            mm.MainGame.onLocationChange += MainGame_onLocationChange3;
+        }
+
+        bool skip = false;
+        private void MainGame_onLocationChange3(Point before, Point now)
+        {
+            var game = mm.MainGame;
+
+            if (game.IsSafeRegion)
+            {
+                skip = true;
+                Rectangle rec = new Rectangle(153, 178, 90, 120);
+                if (rec.Contains(mm.MainGame.CurrentLocation))
+                {
+                    Log.logForce("cc stop");
+                    game.PowerStop();
+                    var pp = PathPointUtil.getResourcePoint("阪泉Boss走路.txt");
+                    var prst = new Point[pp.Length - 20];
+
+                    Array.Copy(pp, 0, prst, 0, prst.Length);
+                    game.isXUNHUAN = false;
+                    game.runPath(prst, () =>
+                    {
+                        Log.logForce("rr ");
+                        skip = false;
+                        game.AutoRun();
+                    });
+                    Log.logForce("next r");
+                }
+                else
+                {
+                    skip = false;
+                }
+            }
+        }
+
     }
 
     class PtrGame

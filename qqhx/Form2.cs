@@ -106,6 +106,7 @@ namespace qqhx
             cw.onSucHandler += Cw_onSucHandler;
             cw.AddImg("D:/qqhximg/dl/登陆帐号.bmp", "等待帐号登陆", 3000);
             cw.AddImg("D:/qqhximg/dl/启动.bmp", "等待点击启动", 6000);
+            cw.AddImg("D:/qqhximg/dl/qd.bmp", "等待点击启动", 6000);
             cw.AddImg("D:/qqhximg/dl/qq帐号登陆.bmp", "等待【点击QQ帐号登陆】", 5000);
             cw.AddImg("D:/qqhximg/dl/人物登陆确定.bmp", "等待点击确认", 1000);
             BitFindInfo bi = new BitFindInfo();

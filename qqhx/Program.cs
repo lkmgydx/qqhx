@@ -10,65 +10,20 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace qqhx
 {
     static class Program
-    {
-        class f
-        {
-            public string a { get; set; }
-            public int k { get; set; }
-        }
-
-        private static void saveConfig()
-        {
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoaming);
-            config.Save(ConfigurationSaveMode.Full);
-            ConfigurationManager.RefreshSection("appSettings");
-        }
-
-        private static Rectangle getRec(Point WantToPoint, Point WantToPointNext)
-        {
-            int left = Math.Min(WantToPoint.X, WantToPointNext.X);
-            int top = Math.Min(WantToPoint.Y, WantToPointNext.Y);
-            int right = Math.Max(WantToPoint.X, WantToPointNext.X);
-            int bottom = Math.Max(WantToPoint.Y, WantToPointNext.Y);
-            return new Rectangle(left, top, right - left, bottom - top);
-        }
+    { 
 
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
         static void Main()
-        {
-            //bool createNew;
-            //using (System.Threading.Mutex m = new System.Threading.Mutex(true, Application.ProductName, out createNew))
-            //{
-            //    if (!createNew)
-            //    {
-            //        MessageBox.Show("Only one instance of this application is allowed!");
-            //        return;
-            //    }
-            //}
-
-            //bool createNew;
-            //using (System.Threading.Mutex m = new System.Threading.Mutex(true, Application.ProductName, out createNew))
-            //{
-            //    if (createNew)
-            //    {
-            //        Application.EnableVisualStyles();
-            //        Application.SetCompatibleTextRenderingDefault(false);
-            //        Application.Run(new Form1());
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show("Only one instance of this application is allowed!");
-            //        return;
-            //    }
-            //}
+        { 
 
             bool isRun = IsApplicationOnRun("ApplicationName");
             if (isRun)
@@ -76,6 +31,13 @@ namespace qqhx
                 WSTools.WSWinFn.ShowError("程序已经启动!");
                 return;
             }
+
+            //var pp = HXmain.MainGame.getResoucePath("阪泉Boss走路.txt");
+
+
+            //var prst = new Point[pp.Length - 20];
+
+            //System.Array.Copy(pp, 0, prst, 0, prst.Length);
 
 
             Application.EnableVisualStyles();

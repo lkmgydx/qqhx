@@ -1,6 +1,7 @@
 ﻿using HXmain.HXAction;
 using HXmain.HXInfo.Map;
 using HXmain.Properties;
+using HXmain.Watcher.NPCAsk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,17 @@ using System.Threading.Tasks;
 
 namespace HXmain.HXInfo.NPC.升龙殿
 {
-    public class NPC_钱善:NPCBase
+    public class NPC_钱善 : NPCBase
     {
-        public NPC_钱善() : base(MapBase.升龙殿, "钱善", new System.Drawing.Point(51, 62))
+        public NPC_钱善() : base(MapBase.Maps.升龙殿, "钱善", new System.Drawing.Point(51, 62))
         {
         }
+
+        public bool 我要出力N(MainGame game)
+        {
+            return new NPC_升龙殿_钱善().我要出力(game);
+        }
+
         public bool 我要出力(MainGame game)
         {
             MoveTo(game);

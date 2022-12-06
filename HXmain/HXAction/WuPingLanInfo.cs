@@ -39,10 +39,17 @@ namespace HXmain.HXAction
             this.game = game;
         }
 
-        private static int flex = 40;
+
+
 
         public List<WuPingData> TilianAllForce()
         {
+
+            if (game.ESCSTOP)
+            {
+                return new List<WuPingData>();
+            }
+
             List<WuPingData> tilians = new List<WuPingData>();
             try
             {
@@ -78,6 +85,10 @@ namespace HXmain.HXAction
                             var rr = new Rectangle(leftTop.X + (i * 41), leftTop.Y + (j * 41), rec.Width, rec.Height);
                             using (Bitmap bt = btemp.Clone(rr, btemp.PixelFormat))
                             {
+                                if (game.ESCSTOP)
+                                {
+                                    return lirst;
+                                }
                                 WuPingData wp = WuPingData.getWuping(bt);
                                 int x = rr.Left + 10;
                                 int y = rr.Top + 10;
@@ -161,7 +172,9 @@ namespace HXmain.HXAction
             game.MouseClick(new Point(150, 130));
             game.sleep(500);
             game.SendKey(System.Windows.Forms.Keys.Space);
-            game.sleep(10);
+            game.sleep(100);
+            game.SendKey(System.Windows.Forms.Keys.Space);
+            game.sleep(100);
         }
 
         public List<WuPingData> TilianAll()

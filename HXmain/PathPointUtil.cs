@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HXmain
 {
-    class PathPointUtil
+    public class PathPointUtil
     {
         public static Point[] getResourcePoint(string name)
         {
@@ -39,5 +39,26 @@ namespace HXmain
             }
             return pt.ToArray();
         }
+
+
+        /// <summary>
+        /// 位置是否在范围内
+        /// </summary>
+        /// <param name="pt"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public static bool isNear(Point[] pt, Point p)
+        {
+
+            for (int i = 0; i < pt.Length; i++)
+            {
+                if (Math.Abs(pt[i].X - p.X) < 10 && Math.Abs(pt[i].Y - p.Y) < 10)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }

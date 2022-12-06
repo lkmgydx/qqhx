@@ -97,6 +97,7 @@
         public static void dbclick()
         {
             User32.mouse_event(6, 0, 0, 0, 0);
+            sleep(100);
             User32.mouse_event(6, 0, 0, 0, 0);
         }
 
@@ -240,9 +241,20 @@
             //float fy = 65535f / Screen.PrimaryScreen.Bounds.Height;
             //int realX = (int)Math.Ceiling(x * fx);
             //int realY = (int)Math.Ceiling(y * fy);
-            
+            User32.SetCursorPos(x + 1, y - 2);
+            Thread.Sleep(1);
             User32.SetCursorPos(x, y);
-           // User32.mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, realX, realY, 0, 0);
+            Thread.Sleep(1);
+            // User32.mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, realX, realY, 0, 0);
+        }
+
+        public static void move_Old(int x, int y)
+        {
+            float fx = 65535f / Screen.PrimaryScreen.Bounds.Width;
+            float fy = 65535f / Screen.PrimaryScreen.Bounds.Height;
+            int realX = (int)Math.Ceiling(x * fx);
+            int realY = (int)Math.Ceiling(y * fy);
+            User32.mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, realX, realY, 0, 0);
         }
 
         public static void moveR(int x, int y)

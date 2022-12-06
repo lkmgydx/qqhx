@@ -46,6 +46,26 @@
         public static extern int CallNextHookEx(int idHook, int nCode, int wParam, IntPtr lParam);
         [DllImport("User32")]
         public static extern bool GetCursorPos(ref Point lpPoint);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetCursorInfo(out CURSORINFO pci);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CURSORINFO
+        {
+            public int cbSize;
+            public int flags;
+            public IntPtr hCursor;
+            public Point ptScreenPos;
+            public static CURSORINFO getNew()
+            {
+                CURSORINFO info = new CURSORINFO();
+                info.cbSize = Marshal.SizeOf(info);
+                return info;
+            }
+
+        }
         /// <summary>
         /// 传0时为获取SCREEN句柄
         /// </summary>
@@ -65,6 +85,9 @@
         public static extern bool ReleaseCapture();
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, long lParam);
+
+        [DllImport("user32", SetLastError = true)]
+        public static extern bool PostMessage(IntPtr hWnd, int Msg, int wParam, long lParam);
         [DllImport("user32")]
         public static extern int SetLayeredWindowAttributes(IntPtr hwnd, int crKey, int bAlpha, int dwFlags);
         [DllImport("user32")]
@@ -119,6 +142,19 @@
             public int top;
             public int right;
             public int bottom;
+        }
+
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool RegisterHotKey(IntPtr hWnd, int id, HotkeyModifiers fsModifiers, Keys vk);
+
+        public enum HotkeyModifiers
+        {
+            MOD_ALT = 0x1,
+            MOD_CONTROL = 0x2,
+            MOD_SHIFT = 0x4,
+            MOD_WIN = 0x8
         }
     }
 }

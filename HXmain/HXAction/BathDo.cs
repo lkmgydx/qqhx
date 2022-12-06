@@ -74,12 +74,16 @@ namespace HXmain.HXAction
                 {
                     lock (lockGameOp)
                     {
-                        Log.log("检测：" + i);
+                        Log.log("base检测：" + i);
                         if (exit || Environment.TickCount - nowTime > ProcessMaxWaitTime)
                         {
                             Console.WriteLine("exit 【false】");
                             onExit?.Invoke(false);
                             return false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("t1:" + (Environment.TickCount - nowTime) + "____" + ProcessMaxWaitTime);
                         }
                         using (Bitmap bt = game.getImg())
                         {

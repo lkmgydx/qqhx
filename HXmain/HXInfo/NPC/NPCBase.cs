@@ -66,7 +66,7 @@ namespace HXmain.HXInfo.NPC
             var path = PathPointUtil.getResourcePoint("天圣原路径.txt");
             //天圣原路径 驿站车夫3
             Point realPoint = this.Position;
-            Map天圣原 天圣原Map = (Map天圣原)MapBase.天圣原;
+            Map天圣原 天圣原Map = MapBase.Maps.天圣原;
             if (天圣原Map.NPC_驿站车夫 == this || 天圣原Map.NPC_驿站车夫2 == this || 天圣原Map.NPC_驿站车夫3 == this)
             {
                 Point nowPosition = game.CurrentLocation;
@@ -151,6 +151,8 @@ namespace HXmain.HXInfo.NPC
                 }
             }));
         }
+
+       
 
         public void Ask(MainGame game)
         {

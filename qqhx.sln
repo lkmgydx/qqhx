@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication2", "Cons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CopyScreen", "CopyScreen\CopyScreen.csproj", "{453843E2-5202-4867-B144-BAEC4274FBC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWin", "TestWin\TestWin.csproj", "{4C0FD364-C41D-4B11-87D5-0F8CDFEF6D97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win6Line", "Win6Line\Win6Line.csproj", "{3E8B84E2-357B-47D0-BCEB-80F5C0C3B05E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +65,22 @@ Global
 		{453843E2-5202-4867-B144-BAEC4274FBC4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{453843E2-5202-4867-B144-BAEC4274FBC4}.Release|x64.ActiveCfg = Release|Any CPU
 		{453843E2-5202-4867-B144-BAEC4274FBC4}.Release|x64.Build.0 = Release|Any CPU
+		{4C0FD364-C41D-4B11-87D5-0F8CDFEF6D97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C0FD364-C41D-4B11-87D5-0F8CDFEF6D97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C0FD364-C41D-4B11-87D5-0F8CDFEF6D97}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4C0FD364-C41D-4B11-87D5-0F8CDFEF6D97}.Debug|x64.Build.0 = Debug|Any CPU
+		{4C0FD364-C41D-4B11-87D5-0F8CDFEF6D97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C0FD364-C41D-4B11-87D5-0F8CDFEF6D97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C0FD364-C41D-4B11-87D5-0F8CDFEF6D97}.Release|x64.ActiveCfg = Release|Any CPU
+		{4C0FD364-C41D-4B11-87D5-0F8CDFEF6D97}.Release|x64.Build.0 = Release|Any CPU
+		{3E8B84E2-357B-47D0-BCEB-80F5C0C3B05E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E8B84E2-357B-47D0-BCEB-80F5C0C3B05E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E8B84E2-357B-47D0-BCEB-80F5C0C3B05E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3E8B84E2-357B-47D0-BCEB-80F5C0C3B05E}.Debug|x64.Build.0 = Debug|Any CPU
+		{3E8B84E2-357B-47D0-BCEB-80F5C0C3B05E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E8B84E2-357B-47D0-BCEB-80F5C0C3B05E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E8B84E2-357B-47D0-BCEB-80F5C0C3B05E}.Release|x64.ActiveCfg = Release|Any CPU
+		{3E8B84E2-357B-47D0-BCEB-80F5C0C3B05E}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

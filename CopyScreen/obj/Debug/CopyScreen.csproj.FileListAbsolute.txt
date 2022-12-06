@@ -1,8 +1,44 @@
-D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.csprojResolveAssemblyReference.cache
+D:\hyl\code\codeqqhx\qqhx\CopyScreen\bin\Debug\CopyScreen.exe.config
+D:\hyl\code\codeqqhx\qqhx\CopyScreen\bin\Debug\CopyScreen.exe
+D:\hyl\code\codeqqhx\qqhx\CopyScreen\bin\Debug\CopyScreen.pdb
+D:\hyl\code\codeqqhx\qqhx\CopyScreen\obj\Debug\CopyScreen.csproj.AssemblyReference.cache
+D:\hyl\code\codeqqhx\qqhx\CopyScreen\obj\Debug\CopyScreen.csproj.SuggestedBindingRedirects.cache
+D:\hyl\code\codeqqhx\qqhx\CopyScreen\obj\Debug\qqhx.CopyScreenForm.resources
+D:\hyl\code\codeqqhx\qqhx\CopyScreen\obj\Debug\CopyScreen.Properties.Resources.resources
+D:\hyl\code\codeqqhx\qqhx\CopyScreen\obj\Debug\CopyScreen.csproj.GenerateResource.cache
+D:\hyl\code\codeqqhx\qqhx\CopyScreen\obj\Debug\CopyScreen.csproj.CoreCompileInputs.cache
+D:\hyl\code\codeqqhx\qqhx\CopyScreen\obj\Debug\CopyScreen.exe
+D:\hyl\code\codeqqhx\qqhx\CopyScreen\obj\Debug\CopyScreen.pdb
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\CopyScreen.exe.config
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\CopyScreen.exe
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\CopyScreen.pdb
 D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\qqhx.CopyScreenForm.resources
 D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.Properties.Resources.resources
 D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.csproj.GenerateResource.Cache
-D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\CopyScreen.exe
-D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\CopyScreen.pdb
 D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.exe
 D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.pdb
+D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.csprojResolveAssemblyReference.cache
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\dll\x86\OpenCvSharpExtern.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\dll\x86\opencv_ffmpeg400.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\dll\x64\OpenCvSharpExtern.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\dll\x64\opencv_ffmpeg400_64.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\Tool.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\AipSdk.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\Newtonsoft.Json.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\WSTools.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\Tool.pdb
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\WSTools.pdb
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\dll\x86\opencv_videoio_ffmpeg455.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\dll\x64\opencv_videoio_ffmpeg455_64.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\System.Buffers.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\System.Drawing.Common.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\System.Memory.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\System.Numerics.Vectors.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\System.ValueTuple.dll
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\System.Buffers.xml
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\System.Memory.xml
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\System.Numerics.Vectors.xml
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\Program Files\hproject\qqhx\CopyScreen\bin\Debug\System.ValueTuple.xml
+D:\Program Files\hproject\qqhx\CopyScreen\obj\Debug\CopyScreen.DrawTool.resources

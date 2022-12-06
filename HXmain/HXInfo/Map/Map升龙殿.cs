@@ -10,8 +10,7 @@ namespace HXmain.HXInfo.Map
 {
     public class Map升龙殿 : MapBase
     {
-        public static Map升龙殿 Map = new Map升龙殿();
-        Map升龙殿()
+        public Map升龙殿()
         {
             MaxWidth = 100;
             MaxHeigth = 170;

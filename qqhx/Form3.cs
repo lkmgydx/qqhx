@@ -136,12 +136,12 @@ namespace qqhx
             ToDaySlD.升龙殿投票NPC任务(game);
             //BaseAction.DoBaseAction(ToDaySlD.get投鲜花(game));
             return;
-            HSearchPoint hs = ImageTool.findLikeImg(MapBase.FONT_排行榜, game.getImg(), 95);
-            if (hs.Success)
-            {
-                game.MouseClick(hs.CenterPoint);
-                // game.MouseRigthClick(new Point(hs.Point.X + 30, hs.Point.Y + 80));
-            }
+            //HSearchPoint hs = ImageTool.findLikeImg(MapBase.FONT_排行榜, game.getImg(), 95);
+            //if (hs.Success)
+            //{
+            //    game.MouseClick(hs.CenterPoint);
+            //    // game.MouseRigthClick(new Point(hs.Point.X + 30, hs.Point.Y + 80));
+            //}
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -208,34 +208,7 @@ namespace qqhx
                 text = text + "_" + "A";
                 return;
             }
-            Draw();
-            return;
-            User32.RECT gi = new User32.RECT();
-            gi.left = 100;
-            gi.right = 200;
-            gi.top = 100;
-            gi.bottom = 200;
-            try
-            {
-                //User32.CreateWindowEx(0,"BUTTON","导入",)
-                Graphics g = Graphics.FromHwnd(game.MainProcess.MainWindowHandle);
-                IntPtr prt = g.GetHdc();
-
-                for (int i = 0; i < 10000; i++)
-                {
-                    //int len = GDI32.DrawText(prt, "H", 1, ref gi, i);
-                    //if (len != 0)
-                    //{
-                    //    "".ToString();
-                    //}
-                }
-                "".ToString();
-            }
-            catch (Exception ex)
-            {
-                ex.ToString();
-            }
-
+            Draw(); 
         }
 
         private void button18_Click(object sender, EventArgs e)
@@ -244,6 +217,11 @@ namespace qqhx
             {
                 HXmain.HXAction.ToDaySlD.升龙殿钱善NPC任务1_自动捐满(this.game);
             });
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -11,14 +11,16 @@ namespace Tool
     {
         public static string getMd5(string str)
         {
-            return getMd5(System.Text.Encoding.Default.GetBytes(str));
+            return getMd5(Encoding.UTF8.GetBytes(str));
         }
-
+        private static MD5 md5 = new MD5CryptoServiceProvider();
         public static string getMd5(byte[] bt)
         {
-            MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] result = md5.ComputeHash(bt);
-            return BitConverter.ToString(result).Replace("-","");
+            lock (md5)
+            {
+                byte[] result = md5.ComputeHash(bt);
+                return BitConverter.ToString(result).Replace("-", "");
+            }
         }
     }
 }

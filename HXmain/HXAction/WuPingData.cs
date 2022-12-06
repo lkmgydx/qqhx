@@ -25,7 +25,8 @@ namespace HXmain.HXAction
         private static Dictionary<string, WuPingData> All_Wuping = new Dictionary<string, WuPingData>();
         public static WuPingData getWuping(Bitmap bmp)
         {
-            if (bmp == null) {
+            if (bmp == null)
+            {
                 return null;
             }
             string key = ImageTool.UUIDImg(bmp);
@@ -36,7 +37,7 @@ namespace HXmain.HXAction
                     return k.Value;
                 }
             }
-           // All_Wuping.Add(key, new WuPingData());
+            // All_Wuping.Add(key, new WuPingData());
             bmp.Save(WUPING_TEMP + key + ".bmp", System.Drawing.Imaging.ImageFormat.Bmp);
             return new WuPingData();
         }
@@ -77,6 +78,10 @@ namespace HXmain.HXAction
                 BinSerialize.toFile(WUPING_BIN, All_Wuping);
             }
             All_Wuping = BinSerialize.fromFile(WUPING_BIN) as Dictionary<string, WuPingData>;
+            if (All_Wuping == null)
+            {
+                All_Wuping = new Dictionary<string, WuPingData>();
+            }
             addEmpt();
             Directory.CreateDirectory(path);
             string[] files = Directory.GetFiles(path);

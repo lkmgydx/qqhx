@@ -1,0 +1,9 @@
+D:\Program Files\hproject\qqhx\Win6Line\bin\Debug\Win6Line.exe
+D:\Program Files\hproject\qqhx\Win6Line\bin\Debug\Win6Line.pdb
+D:\Program Files\hproject\qqhx\Win6Line\obj\Debug\Win6Line.csprojResolveAssemblyReference.cache
+D:\Program Files\hproject\qqhx\Win6Line\obj\Debug\Win6Line.Form1.resources
+D:\Program Files\hproject\qqhx\Win6Line\obj\Debug\Win6Line.Properties.Resources.resources
+D:\Program Files\hproject\qqhx\Win6Line\obj\Debug\Win6Line.SixLine.resources
+D:\Program Files\hproject\qqhx\Win6Line\obj\Debug\Win6Line.csproj.GenerateResource.Cache
+D:\Program Files\hproject\qqhx\Win6Line\obj\Debug\Win6Line.exe
+D:\Program Files\hproject\qqhx\Win6Line\obj\Debug\Win6Line.pdb

@@ -121,8 +121,8 @@ namespace HXmain
         }
 
         private List<MainGame> games = new List<MainGame>();
+        
 
-        private List<IScreenOperater> screens = new List<IScreenOperater>();
         WSTools.WSHook.KeyboardHook key = new WSTools.WSHook.KeyboardHook();
 
         public MainManager()
@@ -239,7 +239,6 @@ namespace HXmain
         public void clearGageProcee()
         {
             games.Clear();
-            screens.Clear();
         }
         public void delGageProcee(Process p)
         {
@@ -617,6 +616,7 @@ namespace HXmain
                     Log.logError("释放异常!", ex);
                 }
             }
+            key.Stop();
         }
 
         public void SendKey(Keys d3)
@@ -634,6 +634,10 @@ namespace HXmain
             }
         }
 
-
+        public void removeGameProcess(MainGame p)
+        {
+            games.Remove(p);
+            p.Dispose();
+        }
     }
 }

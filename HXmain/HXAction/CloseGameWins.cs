@@ -17,15 +17,30 @@ namespace HXmain.HXAction
             this.game = game;
         }
 
+        /// <summary>
+        /// 是否有可关闭的窗口
+        /// </summary>
+        /// <returns></returns>
+        public bool HasCoseWin
+        {
+            get
+            {
+                return game.findImg(Resources.close).Success;
+            }
+        }
+
         public void closeAll()
         {
-            Mouse.cacheLocation();
-            HSearchPoint hs;
-            do
+            game.TopRun(() =>
             {
-                hs = game.clickImg(Resources.close);
-            } while (hs.Success);
-            Mouse.reventLocation();
+                Mouse.cacheLocation();
+                HSearchPoint hs;
+                do
+                {
+                    hs = game.clickImg(Resources.close);
+                } while (hs.Success);
+                Mouse.reventLocation();
+            }, true);
         }
     }
 }

@@ -61,7 +61,16 @@
             }
         }
 
+        public override string ToString()
+        {
+            return "[" + _isSuccess + "] - " + Point + " [" + Times + "]";
+        }
+
         public int Times { get; private set; }
+        /// <summary>
+        /// 空
+        /// </summary>
+        public static readonly HSearchPoint Empty = new HSearchPoint(false, Point.Empty, Size.Empty, 0);
     }
 }
 

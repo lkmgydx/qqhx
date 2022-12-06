@@ -74,8 +74,8 @@ namespace qqhx
 
         private void Form5_Load(object sender, EventArgs e)
         {
-            string file1 = @"11_00_47 - 3298031.bmp";
-            string file = @"10_59_18-2758472.bmp";
+            //string file1 = @"11_00_47 - 3298031.bmp";
+            //string file = @"10_59_18-2758472.bmp";
 
             initImg("03_11_41-17901317");//115.195.181
 

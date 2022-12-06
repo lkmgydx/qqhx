@@ -39,19 +39,28 @@ namespace HXmain.HXAction
 
         public static void Start升龙殿(MainGame game)
         {
+            game.closeAllGameWin();
             game.isXUNHUAN = false;
-            game.runPath(ZYpath, () =>
-             {
-                 Mouse.sleep(2000);
-                 game.closeAllGameWin();
-                 升龙殿投票NPC任务(game);
-                 do2(game);
-             });
+            if (needZY(game))
+            {
+                game.runPath(ZYpath, () =>
+                {
+                    Mouse.sleep(2000);
+                    game.closeAllGameWin();
+                    升龙殿投票NPC任务(game);
+
+                });
+            }
+            else
+            {
+                do2(game);
+            }
         }
 
 
         private static void do2(MainGame game)
         {
+            game.closeAllGameWin();
             game.runPath(GZpath, () =>
             {
                 Mouse.sleep(2000);
@@ -62,6 +71,7 @@ namespace HXmain.HXAction
 
         private static void do3(MainGame game)
         {
+            game.closeAllGameWin();
             game.runPath(QSpath, () =>
             {
                 Mouse.sleep(2000);
@@ -103,7 +113,7 @@ namespace HXmain.HXAction
 
         public static void 升龙殿官职晋升NPC任务1(MainGame game)
         {
-            NpcAskDo np = new NpcAskDo(game, Resources.font_官职晋升, "官职任务");
+            NpcAskDo np = new NpcAskDo(game, Resources.NPC_官职晋升, "官职任务");
             np.ExitBmp = Resources.font_我知道了;
             np.AddSearchBmp(Resources.font_官职任务);
             np.AddSearchBmp(Resources.font_一键完成);
@@ -265,31 +275,46 @@ namespace HXmain.HXAction
 
         public static BaseAction getGG(MainGame game)
         {
-            return BaseAction.getNpcAction(game, Resources.font_官职晋升);
+            return BaseAction.getNpcAction(game, Resources.NPC_官职晋升);
         }
 
         public static void 升龙殿投票NPC任务(MainGame game)
         {
-            //game.MovePoint(new System.Drawing.Point(43, 103));
-            List<BaseAction> li = new List<BaseAction>();
-            li.Add(DoToDaySLD(game));
-            li.Add(get和宅院驿丞对话(game));
-            li.Add(get排行榜第一(game));
-            li.Add(get投鲜花(game));
-            li.Add(get投鲜花(game));
-            li.Add(get投鲜花(game));
-            li.Add(get投鲜花(game));
-            BaseAction ba = get投鲜花(game);
-            ba.AfterWaitTime = 500;
-            li.Add(ba);
-            BaseAction.DoActions(li);
+            if (needZY(game))
+            {
+                List<BaseAction> li = new List<BaseAction>();
+                li.Add(DoToDaySLD(game));
+                li.Add(get和宅院驿丞对话(game));
+                li.Add(get排行榜第一(game));
+                li.Add(get投鲜花(game));
+                li.Add(get投鲜花(game));
+                li.Add(get投鲜花(game));
+                li.Add(get投鲜花(game));
+                BaseAction ba = get投鲜花(game);
+                ba.AfterWaitTime = 500;
+                li.Add(ba);
+                try
+                {
+                    BaseAction.DoActions(li);
+                }
+                catch (Exception ex)
+                {
+                    Log.logErrorForce("宅院异常", ex);
+                }
+                
+            }
 
-            game.SendKey(System.Windows.Forms.Keys.Escape);
+            game.closeAllGameWin();
             升龙殿投票NPC任务_打劫(game);
         }
 
         public static void 升龙殿投票NPC任务_打劫(MainGame game)
         {
+            if (!needZY_DJ(game))
+            {
+                return;
+            }
+            var info = iniAndGetDay(game);
             int maxCount = 10;
             while (true)
             {
@@ -303,14 +328,14 @@ namespace HXmain.HXAction
                 BaseAction.DoActions(li);
                 game.MouseClick(452, 366);
                 game.sleep(500);
-                if (game.findImg(Resources.font_打劫剩余0).Success)
+                if (game.findImg(Resources.打劫0).Success)
                 {
+                    info.ZY_DJ_ALL_Count = info.ZY_DJ_Count;
                     game.closeAllGameWin();
                     return;
                 }
                 game.clickImg(Resources.font_肥羊列表);
                 game.sleep(500);
-
 
                 List<HSearchPoint> hs = game.findImgAll(Resources.font_打劫4品1);
                 if (hs.Count == 0)
@@ -319,34 +344,12 @@ namespace HXmain.HXAction
                 }
                 int f = new Random().Next(0, hs.Count);
                 game.MouseClick(hs[f].Point.X - 210, hs[f].Point.Y);
-
-
-                // game.clickImg(Resources.font_打劫4品1, -210, 5, false);
-
-                game.sleep(3000);
-                game.clickImg(Resources.font_前往打劫);
-                game.sleep(2000);
+                if (game.clickImg(Resources.font_前往打劫).Success)
+                {
+                    info.ZY_DJ_Count++;
+                }
                 game.closeAllGameWin();
             }
-
-
-
-            //game.clickImg(Resources.font_今日剩余打劫次数);
-
-
-            //var ad = new NpcAskDo(game, Resources.npc_升龙殿_宅院驿丞310211406, "宅院驿丞任务...");
-            //ad.AddSearchBmp(Resources.font_趁火打劫);
-            //ad.AddSearchBmp(Resources.font_肥羊列表);
-            //ad.AddOnSucBmp(Resources.font_肥羊列表, () => { return true; });
-
-            //ad.ExitBmp = Resources.act_钱善_exit;
-            //ad.addWaitDoImage(Resources.自动捐满Suc, 30000);
-
-            //bool suc = ad.Start();
-
-            //BathDo bd = new BathDo(game);
-            //bd.AddSearchBmp(Resources.font_领取荣誉);
-            //bd.Start();
         }
 
         private static BaseAction DoToDaySLD(MainGame game)
@@ -357,7 +360,6 @@ namespace HXmain.HXAction
             ba.MatchOp = 95;
             ba.FlotPoint = new System.Drawing.Point(30, 80);
             ba.ActionType = ActionType.RigthDbClick;
-            ba.ReverMousePostion = false;
             ba.game = game;
             return ba;
         }
@@ -369,7 +371,6 @@ namespace HXmain.HXAction
             ba.Bmp = Resources.font_排行榜;
             ba.MatchOp = 95;
             ba.isCenter = true;
-            ba.ReverMousePostion = false;
             ba.game = game;
             return ba;
         }
@@ -381,12 +382,71 @@ namespace HXmain.HXAction
             return action;
         }
 
+        private static Dictionary<string, dicInfo> di = new Dictionary<string, dicInfo>();
+
+        /// <summary>
+        /// 是否已经自动完成宅院任务
+        /// </summary>
+        /// <param name="game"></param>
+        /// <returns></returns>
+        public static bool needZY(MainGame game)
+        {
+            var c = iniAndGetDay(game);
+            return c.ZY_Count < 5;
+        }
+
+        public static bool needZY_DJ(MainGame game)
+        {
+            var info = iniAndGetDay(game);
+            return info.ZY_DJ_Count == info.ZY_DJ_ALL_Count;
+        }
+
+        private static dicInfo iniAndGetDay(MainGame game)
+        {
+            var key = game.Name + DateTime.Now.DayOfYear;
+            var dicInfo = new dicInfo()
+            {
+                Name = key,
+                ZY_DJ_ALL_Count = 5
+            };
+            if (!di.ContainsKey(key))
+            {
+                di.Add(key, dicInfo);
+            }
+            return di[key];
+        }
+
+        struct dicInfo
+        {
+            /// <summary>
+            /// 名称
+            /// </summary>
+            public string Name;
+            /// <summary>
+            /// 宅院鲜花次数
+            /// </summary>
+            public int ZY_Count;
+            /// <summary>
+            /// 宅院打劫成功次数
+            /// </summary>
+            public int ZY_DJ_Count;
+            /// <summary>
+            /// 宅院总共打劫数次
+            /// </summary>
+            public int ZY_DJ_ALL_Count;
+        }
+
         private static BaseAction get投鲜花(MainGame game)
         {
+            var info = iniAndGetDay(game);
             BaseAction ba = BaseAction.getAction(game, Resources.font_投掷鲜花);
             ba.MatchOp = 95;
             ba.BeforActionTime = 300;
             ba.isCenter = true; ;
+            ba.HXAction = () =>
+            {
+                info.ZY_Count++;
+            };
             return ba;
         }
     }

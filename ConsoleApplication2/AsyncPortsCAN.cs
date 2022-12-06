@@ -60,7 +60,7 @@ namespace ConsoleApplication2
                     // UpdateListBox(listBox1, m_host + ":" + m_port.ToString());
                 }
             }
-            catch (System.Net.Sockets.SocketException e)
+            catch 
             {
                 //容错处理
                 //MessageBox.Show("Port {0} is closed", host.ToString());

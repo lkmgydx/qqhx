@@ -61,10 +61,26 @@
         }
 
 
+        public delegate void onErorrHandler();
+        public event onErorrHandler onError;
+
         public Bitmap getImg(Rectangle rec)
         {
             long start = Environment.TickCount;
             IntPtr windowDC = HUser32.GetWindowDC(this._intPtr);
+            if (windowDC == IntPtr.Zero || _intPtr == IntPtr.Zero)
+            {
+                if (onError != null)
+                {
+                    IntPtr before = Handle;
+                    onError.Invoke();
+                    if (before.ToInt32() != Handle.ToInt32())
+                    {
+                        return getImg(rec);
+                    }
+                }
+                return new Bitmap(1, 1);
+            }
             IntPtr hDC = HGDI32.CreateCompatibleDC(windowDC);
             IntPtr hObject = HGDI32.CreateCompatibleBitmap(windowDC, rec.Width, rec.Height);
             IntPtr ptr4 = HGDI32.SelectObject(hDC, hObject);
